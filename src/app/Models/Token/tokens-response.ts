@@ -1,4 +1,6 @@
+import {Token} from './token';
+
 export interface TokensResponse {
-  accessToken: string;
-  refreshToken: string;
+  accessToken: Token;
+  refreshToken: Token;
 }

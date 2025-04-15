@@ -2,39 +2,39 @@
   <div class="row justify-content-center">
     <div class="col-md-6 col-lg-4">
       <div class="sign-in-card">
-        <h2 class="text-center">Вход</h2>
-        <form (ngSubmit)="onSubmit()" #signInForm="ngForm">
+        <h2 class="text-center">Sign in</h2>
+        <form (ngSubmit)="onSubmit()" [formGroup]="Form">
           <div class="form-group">
             <label for="email">Email</label>
             <input
+              formControlName="email"
               type="email"
               class="form-control"
               id="email"
               name="email"
-              ngModel
               required
               email
-              placeholder="Введите ваш email"
+              placeholder="Enter your email"
             />
           </div>
           <div class="form-group">
-            <label for="password">Пароль</label>
+            <label for="password">Password</label>
             <input
+              formControlName="password"
               type="password"
               class="form-control"
               id="password"
               name="password"
-              ngModel
               required
               placeholder="Enter your password"
             />
           </div>
-          <button type="submit" class="btn btn-primary btn-block" [disabled]="!signInForm.form.valid">
-            Войти
+          <button type="submit" class="btn btn-primary btn-block">
+            Sign in
           </button>
         </form>
         <div class="text-center mt-3">
-          <a href="#" class="forgot-password">Forgot password?</a>
+          <a href="sign-up" class="forgot-password">Create an account?</a>
         </div>
       </div>
     </div>
