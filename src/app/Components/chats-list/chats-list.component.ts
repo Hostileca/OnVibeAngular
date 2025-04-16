@@ -1,10 +1,16 @@
 ﻿import {Component, EventEmitter, Output} from '@angular/core';
 import { PaginationBaseComponent } from '../pagination-base-component/pagination-base.component';
-import {Chat} from '../../Models/Chat/chat';
+import {Chat} from '../../Data/Models/Chat/chat';
+import {NgForOf, NgIf} from '@angular/common';
+import {ChatComponent} from '../chat/chat.component';
 
 @Component({
   selector: 'app-chats-list',
-  imports: [],
+  imports: [
+    NgForOf,
+    ChatComponent,
+    NgIf
+  ],
   templateUrl: './chats-list.component.html',
   styleUrl: './chats-list.component.css'
 })

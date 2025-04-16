@@ -1,2 +1,4 @@
-<div class="chats-container">
-</div>
+<app-chats-list [EntitySource]="ChatsSource"
+                [PageSize]="PaginationConfig.ChatsLoadingSize"
+                (OnSelectChat)="SelectChat($event)">
+</app-chats-list>

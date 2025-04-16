@@ -1,5 +1,9 @@
-﻿<div class="chat-list">
-  <div class="chat-items">
-    chats
-  </div>
+﻿<div [id]="_loadingContainerId">
+  <app-chat *ngFor="let chat of Entities"
+                 [Chat]="chat"
+                 (OnSelectChat)="SelectChat(chat)">
+  </app-chat>
 </div>
+
+<div *ngIf="IsLoading()" class="status">Loading more chats...</div>
+<div *ngIf="IsEnded()" class="status">No more chats</div>

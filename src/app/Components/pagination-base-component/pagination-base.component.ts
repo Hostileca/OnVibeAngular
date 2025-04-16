@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, Input, OnChanges, OnInit} from '@angular/core';
 import {fromEvent, Observable, tap} from "rxjs";
-import {PageSettings} from '../../Models/page-settings';
+import {PageSettings} from '../../Data/Models/page-settings';
 
 @Component({template: ``})
 export abstract class PaginationBaseComponent<TEntity> implements OnInit, OnChanges, AfterViewInit  {
@@ -18,11 +18,11 @@ export abstract class PaginationBaseComponent<TEntity> implements OnInit, OnChan
     this._pageSettings.pageSize = pageSize
   }
 
-  @Input({required: true}) set EntitySource(entitySource: (pageSettings: PageSettings) => Observable<TEntity[]>) {
+  @Input({required: true}) set EntitySource(entitySource: (pageSettings: PageSettings) => Promise<TEntity[]>) {
     this._entitySource = entitySource
   }
 
-  protected _entitySource!: (pageSettings: PageSettings) => Observable<TEntity[]>
+  protected _entitySource!: (pageSettings: PageSettings) => Promise<TEntity[]>
   private _isLoading: boolean = false
   private _isEnded: boolean = false
 
@@ -68,29 +68,32 @@ export abstract class PaginationBaseComponent<TEntity> implements OnInit, OnChan
       .subscribe();
   }
 
-  private LoadEntities(){
+  private async LoadEntities() {
     if (this._isLoading || this._isEnded) {
-      return
+      return;
     }
 
-    this._isLoading = true
-    this._entitySource(this._pageSettings).subscribe({
-      next: entities => {
-        this.OnLoadEntities(entities)
-        this.UpdateIsEntitiesEnded(entities)
-        this._pageSettings.pageNumber += 1
-      },
-      error: err => {
-        console.error(err)
-      },
-      complete: () => {
-        this._isLoading = false
-      }
-    })
+    this._isLoading = true;
+
+    try {
+      const entities = await this._entitySource(this._pageSettings);
+      this.OnLoadEntities(entities);
+      this.UpdateIsEntitiesEnded(entities);
+      this._pageSettings.pageNumber += 1;
+    } catch (err) {
+      console.error(err);
+    } finally {
+      this._isLoading = false;
+    }
   }
 
   protected OnLoadEntities(entities: TEntity[]){
-    this.Entities = [...this.Entities, ...entities]
+    if (!Array.isArray(entities)) {
+      console.warn('Received non-array entities:', entities);
+      entities = [];
+    }
+
+    this.Entities = this.Entities.concat(entities);
   }
 
   private UpdateIsEntitiesEnded(entities: TEntity[]) {
