@@ -1,1 +1,39 @@
-<p>chat-details works!</p>
+<div class="chat-details">
+  <div class="chat-header">
+    <button class="btn-back d-md-none">
+      <i class="bi bi-arrow-left"></i>
+    </button>
+
+    <div class="user-info">
+      <div class="avatar-container">
+        <img [src]="123" [alt]="'avatar'" class="avatar">
+      </div>
+      <div class="user-meta">
+        <h5 class="username">chat name</h5>
+      </div>
+    </div>
+
+    <div class="chat-actions">
+      <button class="btn-action">
+        <i class="bi bi-search"></i>
+      </button>
+      <button class="btn-action">
+        <i class="bi bi-three-dots-vertical"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="messages-container">
+
+  </div>
+
+  <div class="message-input-container">
+    <button class="btn-attach">
+      <i class="bi bi-paperclip"></i>
+    </button>
+    <input type="text" placeholder="Enter your message" class="message-input">
+    <button class="btn-send">
+      <i class="bi bi-send"></i>
+    </button>
+  </div>
+</div>

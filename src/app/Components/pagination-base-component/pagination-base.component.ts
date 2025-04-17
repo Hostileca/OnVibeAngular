@@ -1,6 +1,7 @@
 import {AfterViewInit, Component, Input, OnChanges, OnInit} from '@angular/core';
 import {fromEvent, Observable, tap} from "rxjs";
-import {PageSettings} from '../../Data/Models/page-settings';
+import {PageSettings} from '../../Data/Models/Page/page-settings';
+import {PagedResponse} from '../../Data/Models/Page/paged-response';
 
 @Component({template: ``})
 export abstract class PaginationBaseComponent<TEntity> implements OnInit, OnChanges, AfterViewInit  {
@@ -18,11 +19,11 @@ export abstract class PaginationBaseComponent<TEntity> implements OnInit, OnChan
     this._pageSettings.pageSize = pageSize
   }
 
-  @Input({required: true}) set EntitySource(entitySource: (pageSettings: PageSettings) => Promise<TEntity[]>) {
+  @Input({required: true}) set EntitySource(entitySource: (pageSettings: PageSettings) => Promise<PagedResponse<TEntity>>) {
     this._entitySource = entitySource
   }
 
-  protected _entitySource!: (pageSettings: PageSettings) => Promise<TEntity[]>
+  protected _entitySource!: (pageSettings: PageSettings) => Promise<PagedResponse<TEntity>>
   private _isLoading: boolean = false
   private _isEnded: boolean = false
 
@@ -77,8 +78,8 @@ export abstract class PaginationBaseComponent<TEntity> implements OnInit, OnChan
 
     try {
       const entities = await this._entitySource(this._pageSettings);
-      this.OnLoadEntities(entities);
-      this.UpdateIsEntitiesEnded(entities);
+      this.OnLoadEntities(entities.items);
+      this.UpdateIsEntitiesEnded(entities.items);
       this._pageSettings.pageNumber += 1;
     } catch (err) {
       console.error(err);

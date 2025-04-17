@@ -1,4 +1,31 @@
-<app-chats-list [EntitySource]="ChatsSource"
-                [PageSize]="PaginationConfig.ChatsLoadingSize"
-                (OnSelectChat)="SelectChat($event)">
-</app-chats-list>
+<div class="chat-container d-flex h-100">
+  <div class="chat-list-column border-end bg-light">
+    <div class="chat-list-header p-3 d-flex justify-content-between align-items-center border-bottom">
+      <h5 class="mb-0 fw-semibold">Chats</h5>
+      <button class="btn btn-sm btn-outline-primary rounded-circle">
+        <i class="bi bi-pencil">New</i>
+      </button>
+    </div>
+
+    <app-chats-list
+      [EntitySource]="ChatsSource"
+      [PageSize]="PaginationConfig.ChatsLoadingSize"
+      (OnSelectChat)="SelectChat($event)"
+      class="chat-list-scrollable">
+    </app-chats-list>
+  </div>
+
+  <div class="chat-content-column flex-grow-1" *ngIf="SelectedChat; else emptyState">
+    <app-chat-details *ngIf="SelectedChat"></app-chat-details>
+  </div>
+
+  <ng-template #emptyState>
+    <div class="empty-state d-flex flex-column justify-content-center align-items-center h-100">
+      <div class="empty-icon text-muted mb-3">
+        <i class="bi bi-chat-left-text" style="font-size: 3rem;"></i>
+      </div>
+      <h4 class="mb-2">Select chat</h4>
+      <p class="text-muted text-center">Select chat to start chatting</p>
+    </div>
+  </ng-template>
+</div>

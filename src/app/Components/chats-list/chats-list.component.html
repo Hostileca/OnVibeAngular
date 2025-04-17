@@ -1,7 +1,7 @@
 ﻿<div [id]="_loadingContainerId">
   <app-chat *ngFor="let chat of Entities"
-                 [Chat]="chat"
-                 (OnSelectChat)="SelectChat(chat)">
+                 [chat]="chat"
+                 (selected)="SelectChat(chat)">
   </app-chat>
 </div>
 

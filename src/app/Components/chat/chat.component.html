@@ -1,4 +1,13 @@
-<div *ngIf="this.Chat" (click)="SelectChat()">
-  <h3>{{this.Chat.name}}</h3>
-  <p>123123</p>
+<div class="chat-item" (click)="selectChat()">
+  <div class="chat-avatar">
+    <img [src]="avatarUrl" [alt]="chat.name">
+    <span *ngIf="true" class="unread-badge">{{99}}</span>
+  </div>
+  <div class="chat-content">
+    <div class="chat-header">
+      <h4 class="chat-name">{{chat.name}}</h4>
+      <span *ngIf="chat.preview" class="chat-time">{{chat.preview.date}}</span>
+    </div>
+    <p *ngIf="chat.preview" class="chat-preview">{{chat.preview.text}}</p>
+  </div>
 </div>
