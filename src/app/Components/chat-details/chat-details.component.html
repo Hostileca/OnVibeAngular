@@ -4,12 +4,12 @@
       <i class="bi bi-arrow-left"></i>
     </button>
 
-    <div class="user-info">
+    <div class="chat-info" *ngIf="chat">
       <div class="avatar-container">
-        <img [src]="123" [alt]="'avatar'" class="avatar">
+        <img [src]="avatarUrl" [alt]="'avatar'" class="avatar">
       </div>
-      <div class="user-meta">
-        <h5 class="username">chat name</h5>
+      <div class="chat-meta">
+        <h5 class="chat-name">{{this.chat.name}}</h5>
       </div>
     </div>
 

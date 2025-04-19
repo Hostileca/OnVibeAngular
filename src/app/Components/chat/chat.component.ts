@@ -5,6 +5,7 @@ import {Router} from '@angular/router';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {ApiConfig} from '../../Data/Constants/api';
 import {lastValueFrom} from 'rxjs';
+import {FilesService} from '../../Data/Services/files.service';
 
 @Component({
   selector: 'app-chat',
@@ -20,51 +21,16 @@ export class ChatComponent implements OnInit {
 
   public avatarUrl: string = '';
 
-  constructor(private httpClient: HttpClient) {
+  constructor(private readonly _filesService: FilesService) {
   }
 
-  ngOnInit() {
-    this.loadAvatar();
+  async ngOnInit() {
+    await this.loadAvatar()
   }
 
-  private async loadAvatar() {
-    if (!this.chat?.id) {
-      console.error('Chat ID is not defined');
-      return;
-    }
-
-    try {
-      const blob = await lastValueFrom(
-        this.httpClient.get(`${ApiConfig.BaseUrl}/chats/${this.chat.id}/image`, {
-          responseType: 'blob'
-        })
-      );
-
-      if (blob instanceof Blob) {
-        await this.createImageFromBlob(blob);
-      } else {
-        throw new Error('Invalid response type');
-      }
-    } catch (error) {
-      console.error('Failed to load avatar:', error);
-    }
-  }
-
-  private createImageFromBlob(blob: Blob): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-
-      reader.onload = () => {
-        this.avatarUrl = reader.result as string;
-        resolve();
-      };
-
-      reader.onerror = () => {
-        reject(new Error('Failed to read blob data'));
-      };
-
-      reader.readAsDataURL(blob);
-    });
+  private async loadAvatar(){
+    const url = `${ApiConfig.BaseUrl}/chats/${this.chat.id}/image`;
+    this.avatarUrl = await this._filesService.loadImageAsDataUrl(url)
   }
 
   public selectChat() {

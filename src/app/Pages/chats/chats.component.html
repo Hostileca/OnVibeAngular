@@ -8,15 +8,15 @@
     </div>
 
     <app-chats-list
-      [EntitySource]="ChatsSource"
+      [EntitySource]="chatsSource"
       [PageSize]="PaginationConfig.ChatsLoadingSize"
-      (OnSelectChat)="SelectChat($event)"
+      (OnSelectChat)="selectChat($event)"
       class="chat-list-scrollable">
     </app-chats-list>
   </div>
 
-  <div class="chat-content-column flex-grow-1" *ngIf="SelectedChat; else emptyState">
-    <app-chat-details *ngIf="SelectedChat"></app-chat-details>
+  <div class="chat-content-column flex-grow-1" *ngIf="selectedChat; else emptyState">
+    <app-chat-details [selectedChat]="this.selectedChat"></app-chat-details>
   </div>
 
   <ng-template #emptyState>

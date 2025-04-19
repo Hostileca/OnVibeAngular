@@ -19,15 +19,15 @@ import {PagedResponse} from '../../Data/Models/Page/paged-response';
   styleUrl: './chats.component.css'
 })
 export class ChatsComponent {
-  public SelectedChat: Chat | null = null
-  public ChatsSource: (pageSettings: PageSettings) => Promise<PagedResponse<Chat>>
+  public selectedChat!: Chat
+  public chatsSource: (pageSettings: PageSettings) => Promise<PagedResponse<Chat>>
 
   constructor(private readonly _chatService: ChatService) {
-    this.ChatsSource = (pageSettings: PageSettings) => this._chatService.getAvailableChats(pageSettings)
+    this.chatsSource = (pageSettings: PageSettings) => this._chatService.getAvailableChats(pageSettings)
   }
 
-  public SelectChat(chat: Chat) {
-    this.SelectedChat = chat
+  public selectChat(chat: Chat) {
+    this.selectedChat = chat
   }
 
   protected readonly PaginationConfig = PaginationConfig;

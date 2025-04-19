@@ -23,7 +23,7 @@
     display: none;
   }
 
-  .user-info {
+  .chat-info {
     display: flex;
     align-items: center;
     flex-grow: 1;
@@ -42,16 +42,11 @@
       }
     }
 
-    .user-meta {
-      .username {
+    .chat-meta {
+      .chat-name {
         margin: 0;
         font-size: 1rem;
         font-weight: 600;
-      }
-
-      .user-status {
-        font-size: 0.75rem;
-        color: #6c757d;
       }
     }
   }
