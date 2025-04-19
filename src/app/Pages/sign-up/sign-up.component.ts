@@ -34,6 +34,4 @@ export class SignUpComponent {
       await this._router.navigateByUrl("/chats")
     }
   }
-
-  protected readonly FormGroup = FormGroup;
 }
