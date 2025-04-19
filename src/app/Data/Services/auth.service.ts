@@ -15,35 +15,34 @@ import {UserShort} from '../Models/User/user-short';
   providedIn: 'root'
 })
 export class AuthService {
-  public Tokens: TokensResponse | null = null
+  public tokens: TokensResponse | null = null
 
-  public IsAuth(): boolean{
-    return !!this.Tokens
+  public isAuth(): boolean{
+    return !!this.tokens
   }
 
-  constructor(private readonly _router: Router,
-              private readonly _httpClient: HttpClient,
+  constructor(private readonly _httpClient: HttpClient,
               private readonly _appCookieService: AppCookieService) {
-    if(!this.Tokens){
-      this.Tokens = this._appCookieService.Get<TokensResponse>(CookiesName.Tokens)
+    if(!this.tokens){
+      this.tokens = this._appCookieService.get<TokensResponse>(CookiesName.Tokens)
     }
   }
 
-  public async Login(loginRequest: LoginRequest){
+  public async login(loginRequest: LoginRequest){
     try {
       const response = await this._httpClient.post<TokensResponse>(
         `${ApiConfig.BaseUrl}/users/login`,
         loginRequest
       ).toPromise();
 
-      this.SaveTokens(response!);
+      this.saveTokens(response!);
     }
     catch (error) {
       console.error(error)
     }
   }
 
-  public async Register(registerRequest: RegisterRequest){
+  public async register(registerRequest: RegisterRequest){
     try {
       const response = this._httpClient.post<UserShort>(`${ApiConfig.BaseUrl}/users/register`, registerRequest).toPromise();
     }
@@ -52,32 +51,32 @@ export class AuthService {
     }
   }
 
-  public RefreshAuthToken():Observable<TokensResponse>{
-    if (this.Tokens === null) {
+  public refreshAuthToken():Observable<TokensResponse>{
+    if (this.tokens === null) {
       return throwError(new Error('Tokens are null'));
     }
     const tokenRefreshRequest: TokenRefresh = {
-      refreshToken: this.Tokens.refreshToken.value
+      refreshToken: this.tokens.refreshToken.value
     };
 
     return this._httpClient.post<TokensResponse>(`${ApiConfig.BaseUrl}/users/tokens/refresh`, tokenRefreshRequest)
       .pipe(
-        tap(tokenResponse => { this.SaveTokens(tokenResponse) }),
+        tap(tokenResponse => { this.saveTokens(tokenResponse) }),
         catchError(error => {
-          this.Logout()
+          this.logout()
           return throwError(error)
         })
       )
   }
 
-  private SaveTokens(tokens: TokensResponse){
-    this.Tokens = tokens
-    this._appCookieService.Save<TokensResponse>(CookiesName.Tokens, this.Tokens)
+  private saveTokens(tokens: TokensResponse){
+    this.tokens = tokens
+    this._appCookieService.save<TokensResponse>(CookiesName.Tokens, this.tokens)
   }
 
-  public Logout(){
-    this.Tokens = null
-    this._appCookieService.Delete(CookiesName.Tokens)
+  public logout(){
+    this.tokens = null
+    this._appCookieService.delete(CookiesName.Tokens)
   }
 }
 

@@ -8,9 +8,9 @@
     </div>
 
     <app-chats-list
-      [EntitySource]="chatsSource"
-      [PageSize]="PaginationConfig.ChatsLoadingSize"
-      (OnSelectChat)="selectChat($event)"
+      [entitySource]="chatsSource"
+      [pageSize]="PaginationConfig.ChatsLoadingSize"
+      (onSelectChat)="selectChat($event)"
       class="chat-list-scrollable">
     </app-chats-list>
   </div>

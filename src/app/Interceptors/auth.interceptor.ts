@@ -9,7 +9,7 @@ let refreshTokenSubject: BehaviorSubject<string | null> = new BehaviorSubject<st
 
 export const authInterceptor: HttpInterceptorFn = (httpRequest, next) => {
   const authService = inject(AuthService);
-  const tokens = authService.Tokens;
+  const tokens = authService.tokens;
 
   if (!tokens) {
     return next(httpRequest);
@@ -34,7 +34,7 @@ const HandleTokenRefresh = (
     isRefreshing = true;
     refreshTokenSubject.next(null);
 
-    return authService.RefreshAuthToken().pipe(
+    return authService.refreshAuthToken().pipe(
       switchMap(response => {
         isRefreshing = false;
         refreshTokenSubject.next(response.accessToken.value);
@@ -42,7 +42,7 @@ const HandleTokenRefresh = (
       }),
       catchError((error) => {
         isRefreshing = false;
-        authService.Logout();
+        authService.logout();
         inject(Router).navigateByUrl("/")
         return throwError(error);
       })

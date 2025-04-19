@@ -7,12 +7,12 @@ import {CookieService} from "ngx-cookie-service";
 export class AppCookieService {
   constructor(private readonly _cookieService: CookieService) {}
 
-  public Save<TItem>(name: string, item: TItem){
+  public save<TItem>(name: string, item: TItem){
     const serializedObject = JSON.stringify(item)
     this._cookieService.set(name, serializedObject)
   }
 
-  public Get<TItem>(name: string){
+  public get<TItem>(name: string){
     const serializedObject = this._cookieService.get(name)
     if (!serializedObject) {
       return null;
@@ -21,7 +21,7 @@ export class AppCookieService {
     return object
   }
 
-  public Delete(name: string){
+  public delete(name: string){
     this._cookieService.delete(name)
   }
 }

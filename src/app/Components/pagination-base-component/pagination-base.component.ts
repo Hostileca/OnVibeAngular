@@ -5,8 +5,8 @@ import {PagedResponse} from '../../Data/Models/Page/paged-response';
 
 @Component({template: ``})
 export abstract class PaginationBaseComponent<TEntity> implements OnInit, OnChanges, AfterViewInit  {
-  public Entities: TEntity[] = []
-  public LoadingThreshold = 40;
+  public entities: TEntity[] = []
+  public loadingThreshold = 40;
   protected _loadingContainerId?: string
   protected _loadingContainer!: HTMLElement;
 
@@ -15,11 +15,11 @@ export abstract class PaginationBaseComponent<TEntity> implements OnInit, OnChan
     pageNumber: 1
   };
 
-  @Input({required: true}) set PageSize(pageSize: number) {
+  @Input({required: true}) set pageSize(pageSize: number) {
     this._pageSettings.pageSize = pageSize
   }
 
-  @Input({required: true}) set EntitySource(entitySource: (pageSettings: PageSettings) => Promise<PagedResponse<TEntity>>) {
+  @Input({required: true}) set entitySource(entitySource: (pageSettings: PageSettings) => Promise<PagedResponse<TEntity>>) {
     this._entitySource = entitySource
   }
 
@@ -30,46 +30,42 @@ export abstract class PaginationBaseComponent<TEntity> implements OnInit, OnChan
   protected constructor() {
   }
 
-  ngOnInit(): void {
-    this.LoadEntities()
+  async ngOnInit() {
+    await this.loadEntities()
   }
 
   //if user change chat source
-  ngOnChanges(): void {
-    this.Entities = []
+  async ngOnChanges() {
+    this.entities = []
     this._pageSettings.pageNumber = 1
     this._isLoading = false
     this._isEnded = false
-    this.LoadEntities()
+    await this.loadEntities()
   }
 
-  ngAfterViewInit(): void {
-    if(!this._loadingContainerId){
-      console.warn(`No container id provided`)
-      return
+  async ngAfterViewInit() {
+    if (!this._loadingContainerId) {
+      console.warn(`No container id provided`);
+      return;
     }
 
-    const container = document.getElementById(this._loadingContainerId)
+    const container = document.getElementById(this._loadingContainerId);
 
-    if(!container){
-      console.warn(`Container not found with id ${this._loadingContainerId}`)
-      return
+    if (!container) {
+      console.warn(`Container not found with id ${this._loadingContainerId}`);
+      return;
     }
 
-    this._loadingContainer = container
+    this._loadingContainer = container;
 
-    fromEvent(container, 'scroll')
-      .pipe(
-        tap(() => {
-          if(this.CheckLoadingNecessary()){
-            this.LoadEntities()
-          }
-        })
-      )
-      .subscribe();
+    container.addEventListener('scroll', async () => {
+      if (this.checkLoadingNecessary()) {
+        await this.loadEntities();
+      }
+    });
   }
 
-  private async LoadEntities() {
+  private async loadEntities() {
     if (this._isLoading || this._isEnded) {
       return;
     }
@@ -78,8 +74,8 @@ export abstract class PaginationBaseComponent<TEntity> implements OnInit, OnChan
 
     try {
       const entities = await this._entitySource(this._pageSettings);
-      this.OnLoadEntities(entities.items);
-      this.UpdateIsEntitiesEnded(entities.items);
+      this.onLoadEntities(entities.items);
+      this.updateIsEntitiesEnded(entities.items);
       this._pageSettings.pageNumber += 1;
     } catch (err) {
       console.error(err);
@@ -88,32 +84,32 @@ export abstract class PaginationBaseComponent<TEntity> implements OnInit, OnChan
     }
   }
 
-  protected OnLoadEntities(entities: TEntity[]){
+  protected onLoadEntities(entities: TEntity[]){
     if (!Array.isArray(entities)) {
       console.warn('Received non-array entities:', entities);
       entities = [];
     }
 
-    this.Entities = this.Entities.concat(entities);
+    this.entities = this.entities.concat(entities);
   }
 
-  private UpdateIsEntitiesEnded(entities: TEntity[]) {
+  private updateIsEntitiesEnded(entities: TEntity[]) {
     this._isEnded = entities.length < this._pageSettings.pageSize
   }
 
-  public IsLoading(): boolean {
+  public isLoading(): boolean {
     return this._isLoading
   }
 
-  public IsEnded(): boolean {
+  public isEnded(): boolean {
     return this._isEnded
   }
 
-  private CheckLoadingNecessary(): boolean {
+  private checkLoadingNecessary(): boolean {
     const containerHeight = this._loadingContainer.scrollHeight;
     const scrollPosition = Math.abs(this._loadingContainer.scrollTop);
     const visibleHeight = this._loadingContainer.clientHeight;
 
-    return scrollPosition + visibleHeight + this.LoadingThreshold >= containerHeight;
+    return scrollPosition + visibleHeight + this.loadingThreshold >= containerHeight;
   }
 }

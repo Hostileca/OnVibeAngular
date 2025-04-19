@@ -17,14 +17,14 @@ export class SignInComponent {
               private readonly _authService: AuthService
   ){}
 
-  public Form: FormGroup = new FormGroup({
+  public form: FormGroup = new FormGroup({
     email: new FormControl(null, [Validators.required, Validators.email]),
     password: new FormControl(null, [Validators.required, Validators.minLength(4)])
   });
 
   async onSubmit() {
     try {
-      await this._authService.Login(this.Form.value)
+      await this._authService.login(this.form.value)
     }
     catch(error){
       console.error(error);

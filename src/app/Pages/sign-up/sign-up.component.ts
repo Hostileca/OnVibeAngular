@@ -17,7 +17,7 @@ export class SignUpComponent {
               private readonly _authService: AuthService
   ){}
 
-  public Form: FormGroup = new FormGroup({
+  public form: FormGroup = new FormGroup({
     email: new FormControl(null, [Validators.required, Validators.email]),
     username: new FormControl(null, [Validators.required, Validators.minLength(4)]),
     password: new FormControl(null, [Validators.required, Validators.minLength(4)])
@@ -25,7 +25,7 @@ export class SignUpComponent {
 
   async onSubmit() {
     try {
-      await this._authService.Register(this.Form.value)
+      await this._authService.register(this.form.value)
     }
     catch(error){
       console.error(error);

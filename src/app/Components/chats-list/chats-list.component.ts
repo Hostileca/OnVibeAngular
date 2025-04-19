@@ -15,14 +15,14 @@ import {ChatComponent} from '../chat/chat.component';
   styleUrl: './chats-list.component.css'
 })
 export class ChatsListComponent extends PaginationBaseComponent<Chat>{
-  @Output() OnSelectChat = new EventEmitter<Chat>();
+  @Output() onSelectChat = new EventEmitter<Chat>();
 
   constructor() {
     super();
     this._loadingContainerId = 'chats-container'
   }
 
-  public SelectChat(chat: Chat) {
-    this.OnSelectChat.emit(chat)
+  public selectChat(chat: Chat) {
+    this.onSelectChat.emit(chat)
   }
 }
