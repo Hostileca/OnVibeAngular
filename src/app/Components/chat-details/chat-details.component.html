@@ -23,9 +23,7 @@
     </div>
   </div>
 
-  <div class="messages-container">
-
-  </div>
+  <app-messages-list [entitySource]="messagesSource" [pageSize]="PaginationConfig.MessagesLoadingSize"></app-messages-list>
 
   <app-message-input [targetChatId]="this.chat.id"></app-message-input>
 </div>

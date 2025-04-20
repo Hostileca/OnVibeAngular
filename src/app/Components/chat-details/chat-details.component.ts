@@ -9,12 +9,15 @@ import {MessageService} from '../../Data/Services/message.service';
 import {ApiConfig} from '../../Data/Constants/api';
 import {FilesService} from '../../Data/Services/files.service';
 import {MessageInputComponent} from '../message-input/message-input.component';
+import {MessagesListComponent} from '../messages-list/messages-list.component';
+import {PaginationConfig} from '../../Data/Constants/pagination-configs';
 
 @Component({
   selector: 'app-chat-details',
   imports: [
     NgIf,
-    MessageInputComponent
+    MessageInputComponent,
+    MessagesListComponent,
   ],
   templateUrl: './chat-details.component.html',
   styleUrl: './chat-details.component.css'
@@ -44,4 +47,6 @@ export class ChatDetailsComponent {
     const url = `${ApiConfig.BaseUrl}/chats/${this.chat.id}/image`;
     this.avatarUrl = await this._filesService.loadImageAsDataUrl(url)
   }
+
+  protected readonly PaginationConfig = PaginationConfig;
 }

@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {NgIf, NgOptimizedImage} from '@angular/common';
+import {DatePipe, NgIf, NgOptimizedImage} from '@angular/common';
 import {Chat} from '../../Data/Models/Chat/chat';
 import {Router} from '@angular/router';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
@@ -11,6 +11,7 @@ import {FilesService} from '../../Data/Services/files.service';
   selector: 'app-chat',
   imports: [
     NgIf,
+    DatePipe,
   ],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.css'

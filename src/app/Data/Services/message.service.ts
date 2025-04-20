@@ -17,7 +17,8 @@ export class MessageService {
   public async getChatMessages(chatId: string, pageSettings: PageSettings): Promise<PagedResponse<Message>> {
     let params = new HttpParams();
     params = HttpHelper.addPageSettingsToQuery(params, pageSettings)
-    return await lastValueFrom(this._httpClient.get<PagedResponse<Message>>(`${ApiConfig.BaseUrl}/chats/${chatId}/messages`, {params}));
+    params = params.append('chatId', chatId);
+    return await lastValueFrom(this._httpClient.get<PagedResponse<Message>>(`${ApiConfig.BaseUrl}/messages`, {params}));
   }
 
   public async sendMessage(message: SendMessage): Promise<Message> {

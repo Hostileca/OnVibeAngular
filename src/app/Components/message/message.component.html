@@ -1,9 +1,8 @@
-<div class="message" [class.outgoing]="">
+<div class="message" *ngIf="message">
   <div class="message-content">
-    <p>message content</p>
+    <p>{{message.text}}</p>
     <span class="message-time">
-          12:00
-          <i *ngIf="true" class="bi bi-check2-all read-receipt"></i>
-        </span>
+          {{message.date | date:'HH:mm'}}
+    </span>
   </div>
 </div>
