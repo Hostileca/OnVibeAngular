@@ -1,9 +1,17 @@
 <div class="message-input-container">
-  <button class="btn-attach">
-    <i class="bi bi-paperclip"></i>
-  </button>
-  <input type="text" placeholder="Enter your message" class="message-input">
-  <button class="btn-send">
-    <i class="bi bi-send"> > </i>
-  </button>
+  <form (ngSubmit)="onSubmit()" [formGroup]="form" class="message-form">
+    <button type="button" class="btn-attach">
+      <i class="bi bi-paperclip"></i>
+      <span class="btn-text">Files</span>
+    </button>
+    <input
+      formControlName="text"
+      type="text"
+      placeholder="Enter your message"
+      class="message-input">
+    <button type="submit" class="btn-send">
+      <i class="bi bi-send"></i>
+      <span class="btn-text"> > </span>
+    </button>
+  </form>
 </div>

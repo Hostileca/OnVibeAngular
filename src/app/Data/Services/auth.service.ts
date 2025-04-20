@@ -6,7 +6,7 @@ import {AppCookieService} from './app-cookie.service';
 import { CookiesName } from '../Constants/cookies-names';
 import {LoginRequest} from '../Models/User/login-request';
 import {ApiConfig} from '../Constants/api';
-import {catchError, Observable, tap, throwError} from 'rxjs';
+import {catchError, lastValueFrom, Observable, tap, throwError} from 'rxjs';
 import {TokenRefresh} from '../Models/Token/token-refresh';
 import {RegisterRequest} from '../Models/User/register-request';
 import {UserShort} from '../Models/User/user-short';
@@ -29,26 +29,11 @@ export class AuthService {
   }
 
   public async login(loginRequest: LoginRequest){
-    try {
-      const response = await this._httpClient.post<TokensResponse>(
-        `${ApiConfig.BaseUrl}/users/login`,
-        loginRequest
-      ).toPromise();
-
-      this.saveTokens(response!);
-    }
-    catch (error) {
-      console.error(error)
-    }
+    return await lastValueFrom(this._httpClient.post<TokensResponse>(`${ApiConfig.BaseUrl}/users/login`, loginRequest))
   }
 
   public async register(registerRequest: RegisterRequest){
-    try {
-      const response = this._httpClient.post<UserShort>(`${ApiConfig.BaseUrl}/users/register`, registerRequest).toPromise();
-    }
-    catch (error) {
-      console.error(error)
-    }
+    return await lastValueFrom(this._httpClient.post<UserShort>(`${ApiConfig.BaseUrl}/users/register`, registerRequest));
   }
 
   public refreshAuthToken():Observable<TokensResponse>{

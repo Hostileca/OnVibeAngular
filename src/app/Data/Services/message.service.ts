@@ -6,6 +6,7 @@ import {Message} from '../Models/Message/message';
 import {ApiConfig} from '../Constants/api';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {lastValueFrom} from 'rxjs';
+import {SendMessage} from '../Models/Message/send-message';
 
 @Injectable({
   providedIn: 'root'
@@ -17,5 +18,15 @@ export class MessageService {
     let params = new HttpParams();
     params = HttpHelper.addPageSettingsToQuery(params, pageSettings)
     return await lastValueFrom(this._httpClient.get<PagedResponse<Message>>(`${ApiConfig.BaseUrl}/chats/${chatId}/messages`, {params}));
+  }
+
+  public async sendMessage(message: SendMessage): Promise<Message> {
+    let formData = new FormData();
+    if(message.text){
+      formData.append('text', message.text);
+    }
+    formData.append('chatId', message.chatId);
+
+    return await lastValueFrom(this._httpClient.post<Message>(`${ApiConfig.BaseUrl}/messages`, formData));
   }
 }

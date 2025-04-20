@@ -24,14 +24,7 @@ export class SignUpComponent {
   });
 
   async onSubmit() {
-    try {
-      await this._authService.register(this.form.value)
-    }
-    catch(error){
-      console.error(error);
-    }
-    finally {
-      await this._router.navigateByUrl("/chats")
-    }
+    await this._authService.register(this.form.value)
+    await this._router.navigateByUrl("/chats")
   }
 }
