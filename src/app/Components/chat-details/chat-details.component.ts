@@ -8,11 +8,13 @@ import {ChatService} from '../../Data/Services/chat.service';
 import {MessageService} from '../../Data/Services/message.service';
 import {ApiConfig} from '../../Data/Constants/api';
 import {FilesService} from '../../Data/Services/files.service';
+import {MessageInputComponent} from '../message-input/message-input.component';
 
 @Component({
   selector: 'app-chat-details',
   imports: [
-    NgIf
+    NgIf,
+    MessageInputComponent
   ],
   templateUrl: './chat-details.component.html',
   styleUrl: './chat-details.component.css'
