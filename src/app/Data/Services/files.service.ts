@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {lastValueFrom} from 'rxjs';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -8,18 +8,28 @@ import {HttpClient} from '@angular/common/http';
 export class FilesService {
   constructor(private httpClient: HttpClient) {}
 
-  async loadImageAsDataUrl(url: string): Promise<string> {
+  async loadImageAsDataUrl(url: string): Promise<string | null> {
     try {
       const blob = await lastValueFrom(
-        this.httpClient.get(url, { responseType: 'blob' })
+        this.httpClient.get(url, {
+          responseType: 'blob',
+          observe: 'response'
+        })
       );
 
-      if (!(blob instanceof Blob)) {
-        throw new Error('Invalid response type');
+      if (blob.status === 404) {
+        return null;
       }
 
-      return await this.blobToDataUrl(blob);
+      if (!(blob.body instanceof Blob)) {
+        throw new Error('Invalid response type: expected Blob');
+      }
+
+      return await this.blobToDataUrl(blob.body);
     } catch (error) {
+      if (this.is404Error(error)) {
+        return null;
+      }
       console.error('Image loading failed:', error);
       throw error;
     }
@@ -34,5 +44,9 @@ export class FilesService {
 
       reader.readAsDataURL(blob);
     });
+  }
+
+  private is404Error(error: unknown): boolean {
+    return error instanceof HttpErrorResponse && error.status === 404;
   }
 }

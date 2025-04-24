@@ -10,11 +10,13 @@ import {catchError, lastValueFrom, Observable, tap, throwError} from 'rxjs';
 import {TokenRefresh} from '../Models/Token/token-refresh';
 import {RegisterRequest} from '../Models/User/register-request';
 import {UserShort} from '../Models/User/user-short';
+import {User} from '../Models/User/user';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  public userInfo: User | null = null
   public tokens: TokensResponse | null = null
 
   public isAuth(): boolean{
@@ -24,16 +26,19 @@ export class AuthService {
   constructor(private readonly _httpClient: HttpClient,
               private readonly _appCookieService: AppCookieService) {
     if(!this.tokens){
-      this.tokens = this._appCookieService.get<TokensResponse>(CookiesName.Tokens)
+      this.loadCookies()
     }
   }
 
   public async login(loginRequest: LoginRequest){
-    return await lastValueFrom(this._httpClient.post<TokensResponse>(`${ApiConfig.BaseUrl}/users/login`, loginRequest))
+    const tokensResponse = await lastValueFrom(this._httpClient.post<TokensResponse>(`${ApiConfig.BaseUrl}/users/login`, loginRequest));
+    const userInfo = await lastValueFrom(this._httpClient.get<User>(`${ApiConfig.BaseUrl}/users/me`));
+    this.saveTokens(tokensResponse)
+    this.saveUserInfo(userInfo)
   }
 
   public async register(registerRequest: RegisterRequest){
-    return await lastValueFrom(this._httpClient.post<UserShort>(`${ApiConfig.BaseUrl}/users/register`, registerRequest));
+    return await lastValueFrom(this._httpClient.post<User>(`${ApiConfig.BaseUrl}/users/register`, registerRequest));
   }
 
   public refreshAuthToken():Observable<TokensResponse>{
@@ -62,6 +67,16 @@ export class AuthService {
   public logout(){
     this.tokens = null
     this._appCookieService.delete(CookiesName.Tokens)
+  }
+
+  private saveUserInfo(user: User){
+    this.userInfo = user
+    this._appCookieService.save<User>(CookiesName.UserInfo, this.userInfo)
+  }
+
+  private loadCookies(){
+    this.tokens = this._appCookieService.get<TokensResponse>(CookiesName.Tokens)
+    this.userInfo = this._appCookieService.get<User>(CookiesName.UserInfo)
   }
 }
 

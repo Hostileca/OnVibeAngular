@@ -1,6 +1,6 @@
 <div class="chat-item" (click)="selectChat()">
   <div class="chat-avatar">
-    <img [src]="avatarUrl" [alt]="chat.name">
+    <img [src]="avatarUrl || 'chat-default-avatar.jpg'" [alt]="chat.name">
     <span *ngIf="true" class="unread-badge">{{99}}</span>
   </div>
   <div class="chat-content">

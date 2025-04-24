@@ -29,7 +29,7 @@ export class ChatDetailsComponent {
     }
   }
 
-  public avatarUrl: string = '';
+  public avatarUrl: string | null = null;
   public chat!: Chat;
   public messagesSource!: (pageSettings: PageSettings) => Promise<PagedResponse<Message>>
 

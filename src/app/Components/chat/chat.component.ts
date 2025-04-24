@@ -20,7 +20,7 @@ export class ChatComponent implements OnInit {
   @Input() chat!: Chat
   @Output() selected = new EventEmitter<Chat>();
 
-  public avatarUrl: string = '';
+  public avatarUrl: string | null = null;
 
   constructor(private readonly _filesService: FilesService) {
   }
