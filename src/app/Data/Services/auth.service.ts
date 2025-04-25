@@ -32,8 +32,8 @@ export class AuthService {
 
   public async login(loginRequest: LoginRequest){
     const tokensResponse = await lastValueFrom(this._httpClient.post<TokensResponse>(`${ApiConfig.BaseUrl}/users/login`, loginRequest));
-    const userInfo = await lastValueFrom(this._httpClient.get<User>(`${ApiConfig.BaseUrl}/users/me`));
     this.saveTokens(tokensResponse)
+    const userInfo = await lastValueFrom(this._httpClient.get<User>(`${ApiConfig.BaseUrl}/users/me`));
     this.saveUserInfo(userInfo)
   }
 
