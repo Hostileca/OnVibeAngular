@@ -1,0 +1,50 @@
+<div class="container py-4" *ngIf="user">
+  <div class="card mb-4">
+    <div class="row g-0">
+      <div class="col-md-3 text-center p-4">
+        <img [src]="avatarUrl || Assets.userDefaultAvatar"
+             class="img-fluid rounded-circle mb-3"
+             alt="User avatar"
+             style="width: 150px; height: 150px; object-fit: cover;">
+        <h3 class="mb-0">{{ user.username }}</h3>
+      </div>
+      <div class="col-md-9">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <div>
+              <span class="text-muted">Member since {{ user.createdAt | date:'mediumDate' }}</span>
+            </div>
+            <button class="btn btn-outline-primary">Edit Profile</button>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <p *ngIf="user.dateOfBirth"><strong>Age:</strong> {{ user.dateOfBirth | age }} </p>
+              <p *ngIf="user.city"><strong>City:</strong> {{ user.city }}</p>
+            </div>
+            <div class="col-md-6">
+              <p><strong>Birthday:</strong> {{ user.dateOfBirth | date:'mediumDate' }}</p>
+            </div>
+          </div>
+
+          <div class="bio-section">
+            <h5>About</h5>
+            <p class="text-muted">{{ user.bio || 'No bio yet' }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="posts-section">
+    <h4 class="mb-4">Posts</h4>
+
+    <app-posts-list [pageSize]="PaginationConfig.PostsLoadingSize" [entitySource]="postsSource"></app-posts-list>
+
+    <div *ngIf="loadedPosts.length === 0" class="text-center py-5">
+      <i class="bi bi-file-earmark-text" style="font-size: 3rem; opacity: 0.3;"></i>
+      <h5 class="mt-3">No posts yet</h5>
+      <p class="text-muted">This user hasn't posted anything yet.</p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,19 @@
+<a [routerLink]="['/users', user.id]"
+  class="list-group-item list-group-item-action"
+>
+  <div class="d-flex align-items-center">
+    <img
+      [src]="avatarUrl || Assets.userDefaultAvatar"
+      class="rounded-circle me-3"
+      width="50"
+      height="50"
+      alt="User avatar"
+    >
+    <div>
+      <h5 class="mb-1">{{ user.username }}</h5>
+      <small class="text-muted">
+        {{ user.city }}{{ user.city && user.city ? ', ' : '' }}{{ user.city }}
+      </small>
+    </div>
+  </div>
+</a>
