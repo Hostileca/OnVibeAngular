@@ -31,6 +31,7 @@ export class UserProfileComponent {
   public user!: User;
   public avatarUrl: string | null = null;
   public postsSource: (pageSettings: PageSettings) => Promise<PagedResponse<Post>>
+
   public get loadedPosts(){
     if(this.postsListComponent){
       return this.postsListComponent.entities;
