@@ -13,6 +13,7 @@ import {PostService} from '../../../Data/Services/post.service';
 import {PagedResponse} from '../../../Data/Models/Page/paged-response';
 import {PostsListComponent} from '../../pagination/posts-list/posts-list.component';
 import {PaginationConfig} from '../../../Data/Constants/pagination-configs';
+import {AuthService} from '../../../Data/Services/auth.service';
 
 @Component({
   selector: 'app-user-profile',
@@ -39,7 +40,8 @@ export class UserProfileComponent {
     return [];
   }
 
-  constructor(private readonly _userService: UserService,
+  constructor(private readonly _authService: AuthService,
+              private readonly _userService: UserService,
               private readonly _fileService: FileService,
               private readonly _postService: PostService,
               route: ActivatedRoute) {
@@ -59,6 +61,14 @@ export class UserProfileComponent {
   private async loadAvatar(){
     const url = `${ApiConfig.BaseUrl}/users/${this.user.id}/avatar`;
     this.avatarUrl = await this._fileService.loadImageAsDataUrl(url)
+  }
+
+  protected get isCurrentUser(){
+    return this._authService.userInfo?.id == this.user.id
+  }
+
+  protected openCreatePostModal(){
+
   }
 
   protected readonly Assets = Assets;
