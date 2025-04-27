@@ -37,14 +37,35 @@ export class FileService {
     }
   }
 
-  public async getAttachmentBlobUrlById(id: string): Promise<string> {
-    const blobResponse = await lastValueFrom(
-      this._httpClient.get(`${ApiConfig.BaseUrl}/attachments`, {
+  public async getAttachmentBlobById(id: string): Promise<{ blob: Blob, fileName: string }> {
+    const response = await lastValueFrom(
+      this._httpClient.get(`${ApiConfig.BaseUrl}/attachments/${id}`, {
         responseType: 'blob',
         observe: 'response'
-      }))
+      })
+    );
+    console.log(response.headers);
 
-    return URL.createObjectURL(blobResponse.body as Blob);
+    const blob = response.body as Blob;
+
+    const contentDisposition = response.headers.get('Content-Disposition');
+    let fileName = 'unknown';
+
+    if (contentDisposition) {
+      const matches = /filename="(.+)"/.exec(contentDisposition);
+      if (matches != null && matches[1]) {
+        fileName = matches[1];
+      }
+
+      if (fileName === 'unknown') {
+        const matchesUtf8 = /filename\*=UTF-8''(.+)/.exec(contentDisposition);
+        if (matchesUtf8 != null && matchesUtf8[1]) {
+          fileName = matchesUtf8[1];
+        }
+      }
+    }
+
+    return { blob, fileName };
   }
 
   private blobToDataUrl(blob: Blob): Promise<string> {

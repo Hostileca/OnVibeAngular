@@ -8,21 +8,4 @@ export class HttpHelper{
 
     return httpParams
   }
-
-  static fillForm(form: FormData, object: any){
-    Object.entries(object).forEach(([key, value]) => {
-      if (value) {
-        form.append(key, value.toString());
-      }
-    });
-  }
-
-  static fillParams(httpParams: HttpParams, object: any) : HttpParams {
-    Object.entries(object).forEach(([key, value]) => {
-      if (value) {
-        httpParams = httpParams.append(key, value.toString());
-      }
-    });
-    return httpParams;
-  }
 }

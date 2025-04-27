@@ -7,12 +7,14 @@ import {lastValueFrom} from 'rxjs';
 import {ApiConfig} from '../Constants/api';
 import {Post} from '../Models/Post/post';
 import {CreatePost} from '../Models/Post/create-post';
+import {FileService} from './file.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PostService {
-  constructor(private readonly _httpClient: HttpClient) {}
+  constructor(private readonly _httpClient: HttpClient,
+              private readonly _fileService: FileService) {}
 
   public async getUserPosts(userId: string, pageSettings: PageSettings): Promise<PagedResponse<Post>> {
     let params = new HttpParams();
@@ -23,7 +25,15 @@ export class PostService {
 
   public async createPost(post: CreatePost): Promise<Post> {
     let formData = new FormData();
-    HttpHelper.fillForm(formData, post)
+    if(post.content){
+      formData.append('content', post.content);
+    }
+    if(post.attachments){
+      for (const attachment of post.attachments){
+        formData.append('attachments', attachment);
+      }
+    }
+
     return await lastValueFrom(this._httpClient.post<Post>(`${ApiConfig.BaseUrl}/posts`, formData));
   }
 }

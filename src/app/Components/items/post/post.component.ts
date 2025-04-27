@@ -1,16 +1,24 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {Post} from '../../../Data/Models/Post/post';
 import {FileService} from '../../../Data/Services/file.service';
-import {DatePipe, NgForOf, NgIf} from '@angular/common';
+import {DatePipe, NgClass, NgForOf, NgIf} from '@angular/common';
 import {ApiConfig} from '../../../Data/Constants/api';
 import {Assets} from '../../../Data/Constants/assets';
+import {NgbCarousel} from '@ng-bootstrap/ng-bootstrap';
+import {FileSizePipe} from '../../../Data/Pipes/file-size.pipe';
+import {LoadedAttachment} from '../../../Data/Models/Attachment/loaded-attachment';
+import {BlobUrlPipe} from '../../../Data/Pipes/blob-url.pipe';
 
 @Component({
   selector: 'app-post',
   imports: [
     DatePipe,
     NgForOf,
-    NgIf
+    NgIf,
+    NgbCarousel,
+    NgClass,
+    FileSizePipe,
+    BlobUrlPipe
   ],
   templateUrl: './post.component.html',
   styleUrl: './post.component.css'
@@ -18,21 +26,57 @@ import {Assets} from '../../../Data/Constants/assets';
 export class PostComponent implements OnInit {
   @Input() post!: Post;
   public ownerAvatarUrl: string | null = null;
+  public loadedAttachments: LoadedAttachment[] = [];
+
+  protected get imageAttachments() {
+    return this.loadedAttachments.filter(attachment => this.isImage(attachment)) || [];
+  }
+
+  protected get otherAttachments() {
+    return this.loadedAttachments.filter(attachment => !this.isImage(attachment)) || [];
+  }
+
+  protected get isLiked() {
+    return false;
+  }
 
   constructor(private readonly _fileService: FileService) {
   }
 
   async ngOnInit() {
-    await this.loadOwnerAvatar()
-  }
-
-  public async getAttachmentUrl(attachmentId: string){
-    return await this._fileService.getAttachmentBlobUrlById(attachmentId)
+    await this.loadOwnerAvatar();
+    await this.loadAttachments();
   }
 
   private async loadOwnerAvatar(){
     const url = `${ApiConfig.BaseUrl}/users/${this.post.owner.id}/image`;
     this.ownerAvatarUrl = await this._fileService.loadImageAsDataUrl(url)
+  }
+
+  private async loadAttachments() {
+    const blobs = await Promise.all(
+      this.post.attachmentsIds.map(id => this._fileService.getAttachmentBlobById(id))
+    );
+    this.loadedAttachments.push(...blobs);
+  }
+
+  protected isImage(attachment: LoadedAttachment){
+    return attachment.blob.type.startsWith('image/');
+  }
+
+  protected getFileIcon(file: any): string {
+    if (file.type?.includes('pdf')) return 'bi-file-earmark-pdf';
+    if (file.type?.includes('word')) return 'bi-file-earmark-word';
+    if (file.type?.includes('video')) return 'bi-file-earmark-play';
+    return 'bi-file-earmark';
+  }
+
+  protected toggleLike(){
+
+  }
+
+  protected toggleComments(){
+
   }
 
   protected readonly Assets = Assets;

@@ -14,6 +14,8 @@ import {PagedResponse} from '../../../Data/Models/Page/paged-response';
 import {PostsListComponent} from '../../pagination/posts-list/posts-list.component';
 import {PaginationConfig} from '../../../Data/Constants/pagination-configs';
 import {AuthService} from '../../../Data/Services/auth.service';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {CreatePostModalComponent} from '../../modals/create-post/create-post-modal.component';
 
 @Component({
   selector: 'app-user-profile',
@@ -44,6 +46,7 @@ export class UserProfileComponent {
               private readonly _userService: UserService,
               private readonly _fileService: FileService,
               private readonly _postService: PostService,
+              private readonly modalService: NgbModal,
               route: ActivatedRoute) {
     const userId = route.snapshot.params['userId'];
 
@@ -68,7 +71,10 @@ export class UserProfileComponent {
   }
 
   protected openCreatePostModal(){
-
+    const modalRef = this.modalService.open(CreatePostModalComponent, {
+      size: 'lg',
+      centered: true
+    });
   }
 
   protected readonly Assets = Assets;

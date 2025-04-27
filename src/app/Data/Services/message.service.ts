@@ -23,7 +23,9 @@ export class MessageService {
 
   public async sendMessage(message: SendMessage): Promise<Message> {
     let formData = new FormData();
-    HttpHelper.fillForm(formData, message)
+    if(message.text){
+      formData.append('text', message.text);
+    }
     return await lastValueFrom(this._httpClient.post<Message>(`${ApiConfig.BaseUrl}/messages`, formData));
   }
 }

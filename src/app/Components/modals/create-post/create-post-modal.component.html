@@ -1,0 +1,86 @@
+<div class="card shadow">
+  <div class="card-header bg-primary text-white">
+    <h4 class="mb-0">Create New Post</h4>
+  </div>
+
+  <div class="card-body">
+    <form [formGroup]="postForm" (ngSubmit)="onSubmit()">
+      <div class="mb-3">
+        <label for="content" class="form-label">What's on your mind?</label>
+        <textarea
+          id="content"
+          class="form-control"
+          formControlName="content"
+          rows="5"
+          placeholder="Share your thoughts..."
+          [class.is-invalid]="postForm.get('content')?.invalid && postForm.get('content')?.touched">
+              </textarea>
+        <div *ngIf="postForm.get('content')?.invalid && postForm.get('content')?.touched" class="invalid-feedback">
+          <div *ngIf="postForm.get('content')?.errors?.['maxlength']">
+            Maximum length is 1000 characters
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-4">
+
+        <input
+          type="file"
+          id="attachments"
+          multiple
+          (change)="onFileSelected($event)"
+          accept="image/*, video/*, .pdf, .doc, .docx"
+          style="display: none"
+          #fileInput
+        >
+
+        <button
+          type="button"
+          class="btn btn-outline-primary mb-3"
+          (click)="fileInput.click()">
+          <i class="bi bi-paperclip me-2"></i>Add Files
+        </button>
+
+        <div class="uploaded-files mt-2" *ngIf="isAttachmentsLoaded">
+          <div *ngFor="let file of postForm.get('attachments')?.value; let i = index" class="d-flex align-items-center mb-2">
+                  <span class="me-2">
+                    <i class="bi" [ngClass]="{
+                      'bi-file-earmark-image': file.type.startsWith('image/'),
+                      'bi-file-earmark-play': file.type.startsWith('video/'),
+                      'bi-file-earmark-pdf': file.type === 'application/pdf',
+                      'bi-file-earmark-word': file.type === 'application/msword' || file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                      'bi-file-earmark': true
+                    }"></i>
+                    {{ file.name }} ({{ file.size | fileSize }})
+                  </span>
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-danger ms-auto"
+              (click)="removeAttachment(i)">
+              <i class="bi bi-trash">X</i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-end">
+        <button
+          type="button"
+          class="btn btn-outline-secondary me-2"
+          (click)="cancel()">
+          Cancel
+        </button>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="isSubmitting">
+          <span *ngIf="!isSubmitting">Post</span>
+          <span *ngIf="isSubmitting">
+                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  Posting...
+                </span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

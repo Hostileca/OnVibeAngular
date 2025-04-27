@@ -21,7 +21,17 @@ export class UserService {
   public async getUsers(searchCriteria: UsersSearchCriteria, pageSettings: PageSettings): Promise<PagedResponse<User>> {
     let params = new HttpParams();
     params = HttpHelper.addPageSettingsToQuery(params, pageSettings)
-    params = HttpHelper.fillParams(params, searchCriteria)
+
+    if(searchCriteria.username){
+      params = params.append('username', searchCriteria.username);
+    }
+    if(searchCriteria.country){
+      params = params.append('country', searchCriteria.country);
+    }
+    if(searchCriteria.city){
+      params = params.append('city', searchCriteria.city);
+    }
+
     return await lastValueFrom(this._httpClient.get<PagedResponse<User>>(`${ApiConfig.BaseUrl}/users`, { params }))
   }
 }
