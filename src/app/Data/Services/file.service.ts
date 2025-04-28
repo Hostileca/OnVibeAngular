@@ -26,7 +26,7 @@ export class FileService {
       return this.blobToDataUrl(blob);
     }
     catch (error) {
-      if (error instanceof HttpErrorResponse && error.status === 404) {
+      if (this.is404Error(error)) {
         return null;
       }
       throw error;
