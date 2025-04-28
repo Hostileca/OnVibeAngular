@@ -1,13 +1,14 @@
-import {AfterViewInit, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, Input, OnInit, ViewChild} from '@angular/core';
 import {Post} from '../../../Data/Models/Post/post';
 import {FileService} from '../../../Data/Services/file.service';
 import {DatePipe, NgClass, NgForOf, NgIf} from '@angular/common';
 import {ApiConfig} from '../../../Data/Constants/api';
 import {Assets} from '../../../Data/Constants/assets';
-import {NgbCarousel} from '@ng-bootstrap/ng-bootstrap';
+import {NgbCarousel, NgbCarouselModule} from '@ng-bootstrap/ng-bootstrap';
 import {FileSizePipe} from '../../../Data/Pipes/file-size.pipe';
 import {LoadedAttachment} from '../../../Data/Models/Attachment/loaded-attachment';
 import {BlobUrlPipe} from '../../../Data/Pipes/blob-url.pipe';
+import {LikeService} from '../../../Data/Services/like.service';
 
 @Component({
   selector: 'app-post',
@@ -16,6 +17,7 @@ import {BlobUrlPipe} from '../../../Data/Pipes/blob-url.pipe';
     NgForOf,
     NgIf,
     NgbCarousel,
+    NgbCarouselModule,
     NgClass,
     FileSizePipe,
     BlobUrlPipe
@@ -25,6 +27,7 @@ import {BlobUrlPipe} from '../../../Data/Pipes/blob-url.pipe';
 })
 export class PostComponent implements OnInit {
   @Input() post!: Post;
+
   public ownerAvatarUrl: string | null = null;
   public loadedAttachments: LoadedAttachment[] = [];
 
@@ -36,11 +39,9 @@ export class PostComponent implements OnInit {
     return this.loadedAttachments.filter(attachment => !this.isImage(attachment)) || [];
   }
 
-  protected get isLiked() {
-    return false;
-  }
-
-  constructor(private readonly _fileService: FileService) {
+  constructor(private readonly _fileService: FileService,
+              private readonly _likeService: LikeService,
+              private readonly _cdRef: ChangeDetectorRef) {
   }
 
   async ngOnInit() {
@@ -57,7 +58,7 @@ export class PostComponent implements OnInit {
     const blobs = await Promise.all(
       this.post.attachmentsIds.map(id => this._fileService.getAttachmentBlobById(id))
     );
-    this.loadedAttachments.push(...blobs);
+    this.loadedAttachments = blobs;
   }
 
   protected isImage(attachment: LoadedAttachment){
@@ -71,12 +72,13 @@ export class PostComponent implements OnInit {
     return 'bi-file-earmark';
   }
 
-  protected toggleLike(){
-
+  protected async toggleLike(){
+    const like = await this._likeService.upsertLike(this.post.id)
+    this.post.isLiked = like.isLiked;
+    this.post.likesCount = like.likesCount;
   }
 
   protected toggleComments(){
-
   }
 
   protected readonly Assets = Assets;

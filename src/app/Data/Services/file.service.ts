@@ -44,7 +44,6 @@ export class FileService {
         observe: 'response'
       })
     );
-    console.log(response.headers);
 
     const blob = response.body as Blob;
 

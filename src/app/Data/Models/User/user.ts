@@ -6,4 +6,5 @@ export interface User {
   role: number;
   dateOfBirth?: Date;
   city?: string;
+  postsCount: number;
 }

@@ -20,16 +20,23 @@
 
   <div *ngIf="imageAttachments.length > 0" class="mb-3">
     <div class="position-relative">
-      <ngb-carousel *ngIf="imageAttachments.length > 1"
-                    [interval]="0"
-                    [showNavigationArrows]="true"
-                    [showNavigationIndicators]="true">
-        <ng-template ngbSlide *ngFor="let img of imageAttachments">
-          <img [src]="img.blob | blobUrl"
-               class="d-block w-100 rounded"
-               style="max-height: 500px; object-fit: contain; background-color: #f8f9fa;">
-        </ng-template>
-      </ngb-carousel>
+      <div class="position-relative carousel-wrapper">
+        <ngb-carousel
+          *ngIf="imageAttachments.length > 1"
+          [interval]="0"
+          [showNavigationArrows]="true"
+          [showNavigationIndicators]="true"
+          #carousel>
+          <ng-template ngbSlide *ngFor="let img of imageAttachments">
+            <div class="carousel-image-container">
+              <img
+                [src]="img.blob | blobUrl"
+                class="d-block mx-auto carousel-image"
+                [alt]="img.fileName">
+            </div>
+          </ng-template>
+        </ngb-carousel>
+      </div>
 
       <div *ngIf="imageAttachments.length === 1" class="text-center">
         <img [src]="imageAttachments[0].blob | blobUrl"
@@ -56,8 +63,8 @@
     <div class="d-flex">
       <button class="btn btn-sm btn-link text-decoration-none"
               (click)="toggleLike()"
-              [ngClass]="{'text-primary': isLiked}">
-        <i class="bi" [ngClass]="isLiked ? 'bi-heart-fill' : 'bi-heart'"></i>
+              [ngClass]="{'text-primary': post.isLiked}">
+        <i class="bi" [ngClass]="post.isLiked ? 'bi-heart-fill' : 'bi-heart'"></i>
         <span class="ms-1">{{ post.likesCount }}</span>
       </button>
 

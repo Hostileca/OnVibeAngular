@@ -7,5 +7,6 @@ export interface Post {
   owner: UserShort;
   likesCount: number;
   commentsCount: number;
+  isLiked: boolean;
   attachmentsIds: string[];
 }
