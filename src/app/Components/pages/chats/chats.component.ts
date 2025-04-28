@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {ChatsListComponent} from '../../pagination/chats-list/chats-list.component';
+import {ChatsListComponent} from '../../pagination/lists/chats-list/chats-list.component';
 import {Chat} from '../../../Data/Models/Chat/chat';
 import {PageSettings} from '../../../Data/Models/Page/page-settings';
 import {ChatService} from '../../../Data/Services/chat.service';

@@ -1,12 +1,11 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {DatePipe, NgIf} from "@angular/common";
-import {Chat} from '../../../Data/Models/Chat/chat';
-import {Message} from '../../../Data/Models/Message/message';
-import {ApiConfig} from '../../../Data/Constants/api';
-import {FileService} from '../../../Data/Services/file.service';
-import {demandCommandFailureMessage} from '@angular/cli/src/command-builder/utilities/command';
-import {AuthService} from '../../../Data/Services/auth.service';
-import {Assets} from '../../../Data/Constants/assets';
+import {Message} from '../../../../Data/Models/Message/message';
+import {ApiConfig} from '../../../../Data/Constants/api';
+import {FileService} from '../../../../Data/Services/file.service';
+import {AuthService} from '../../../../Data/Services/auth.service';
+import {Assets} from '../../../../Data/Constants/assets';
+import {ItemBaseComponent} from '../item-base/item-base.component';
 
 @Component({
   selector: 'app-message',
@@ -17,13 +16,12 @@ import {Assets} from '../../../Data/Constants/assets';
   templateUrl: './message.component.html',
   styleUrl: './message.component.css'
 })
-export class MessageComponent implements OnInit {
-  @Input() message!: Message
-
+export class MessageComponent extends ItemBaseComponent<Message> implements OnInit {
   public senderAvatarUrl: string | null = null;
 
   constructor(private readonly _fileService: FileService,
               private readonly _authService: AuthService) {
+    super();
   }
 
   async ngOnInit() {
@@ -33,7 +31,7 @@ export class MessageComponent implements OnInit {
   }
 
   private async loadSenderAvatar(){
-    const url = `${ApiConfig.BaseUrl}/users/${this.message.sender.id}/image`;
+    const url = `${ApiConfig.BaseUrl}/users/${this.item.sender.id}/image`;
     this.senderAvatarUrl = await this._fileService.loadImageAsDataUrl(url)
   }
 
@@ -41,11 +39,11 @@ export class MessageComponent implements OnInit {
     if(this.isSystem){
       return false
     }
-    return this.message.sender.id === this._authService.userInfo?.id;
+    return this.item.sender.id === this._authService.userInfo?.id;
   }
 
   public get isSystem(): boolean {
-    return !this.message.sender
+    return !this.item.sender
   }
 
   protected readonly Assets = Assets;

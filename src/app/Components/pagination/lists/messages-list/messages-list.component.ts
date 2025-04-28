@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import {PaginationBaseComponent} from '../pagination-base-component/pagination-base.component';
-import {Message} from '../../../Data/Models/Message/message';
+import {PaginationBaseComponent} from '../pagination-base/pagination-base.component';
+import {Message} from '../../../../Data/Models/Message/message';
 import {NgForOf} from '@angular/common';
 import {MessageComponent} from '../../items/message/message.component';
 

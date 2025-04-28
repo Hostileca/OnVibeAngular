@@ -9,7 +9,7 @@ import {MessageService} from '../../../Data/Services/message.service';
 import {ApiConfig} from '../../../Data/Constants/api';
 import {FileService} from '../../../Data/Services/file.service';
 import {MessageInputComponent} from '../message-input/message-input.component';
-import {MessagesListComponent} from '../../pagination/messages-list/messages-list.component';
+import {MessagesListComponent} from '../../pagination/lists/messages-list/messages-list.component';
 import {PaginationConfig} from '../../../Data/Constants/pagination-configs';
 
 @Component({

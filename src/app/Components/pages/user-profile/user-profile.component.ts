@@ -11,7 +11,7 @@ import {PageSettings} from '../../../Data/Models/Page/page-settings';
 import {Post} from '../../../Data/Models/Post/post';
 import {PostService} from '../../../Data/Services/post.service';
 import {PagedResponse} from '../../../Data/Models/Page/paged-response';
-import {PostsListComponent} from '../../pagination/posts-list/posts-list.component';
+import {PostsListComponent} from '../../pagination/lists/posts-list/posts-list.component';
 import {PaginationConfig} from '../../../Data/Constants/pagination-configs';
 import {AuthService} from '../../../Data/Services/auth.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';

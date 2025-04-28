@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import {PaginationBaseComponent} from '../pagination-base-component/pagination-base.component';
-import {User} from '../../../Data/Models/User/user';
+import {PaginationBaseComponent} from '../pagination-base/pagination-base.component';
+import {User} from '../../../../Data/Models/User/user';
 import {NgForOf, NgIf} from '@angular/common';
 import {UserComponent} from '../../items/user/user.component';
 

@@ -1,14 +1,15 @@
-import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
-import {Post} from '../../../Data/Models/Post/post';
-import {FileService} from '../../../Data/Services/file.service';
+import {Component, OnInit} from '@angular/core';
+import {Post} from '../../../../Data/Models/Post/post';
+import {FileService} from '../../../../Data/Services/file.service';
 import {DatePipe, NgClass, NgForOf, NgIf} from '@angular/common';
-import {ApiConfig} from '../../../Data/Constants/api';
-import {Assets} from '../../../Data/Constants/assets';
+import {ApiConfig} from '../../../../Data/Constants/api';
+import {Assets} from '../../../../Data/Constants/assets';
 import {NgbCarousel, NgbCarouselModule} from '@ng-bootstrap/ng-bootstrap';
-import {FileSizePipe} from '../../../Data/Pipes/file-size.pipe';
-import {LoadedAttachment} from '../../../Data/Models/Attachment/loaded-attachment';
-import {BlobUrlPipe} from '../../../Data/Pipes/blob-url.pipe';
-import {LikeService} from '../../../Data/Services/like.service';
+import {FileSizePipe} from '../../../../Data/Pipes/file-size.pipe';
+import {LoadedAttachment} from '../../../../Data/Models/Attachment/loaded-attachment';
+import {BlobUrlPipe} from '../../../../Data/Pipes/blob-url.pipe';
+import {LikeService} from '../../../../Data/Services/like.service';
+import {ItemBaseComponent} from '../item-base/item-base.component';
 
 @Component({
   selector: 'app-post',
@@ -25,9 +26,7 @@ import {LikeService} from '../../../Data/Services/like.service';
   templateUrl: './post.component.html',
   styleUrl: './post.component.css'
 })
-export class PostComponent implements OnInit {
-  @Input() post!: Post;
-
+export class PostComponent extends ItemBaseComponent<Post> implements OnInit {
   public ownerAvatarUrl: string | null = null;
   public loadedAttachments: LoadedAttachment[] = [];
 
@@ -40,8 +39,8 @@ export class PostComponent implements OnInit {
   }
 
   constructor(private readonly _fileService: FileService,
-              private readonly _likeService: LikeService,
-              private readonly _cdRef: ChangeDetectorRef) {
+              private readonly _likeService: LikeService) {
+    super();
   }
 
   async ngOnInit() {
@@ -50,13 +49,13 @@ export class PostComponent implements OnInit {
   }
 
   private async loadOwnerAvatar(){
-    const url = `${ApiConfig.BaseUrl}/users/${this.post.owner.id}/image`;
+    const url = `${ApiConfig.BaseUrl}/users/${this.item.owner.id}/image`;
     this.ownerAvatarUrl = await this._fileService.loadImageAsDataUrl(url)
   }
 
   private async loadAttachments() {
     this.loadedAttachments = await Promise.all(
-      this.post.attachmentsIds.map(id => this._fileService.getAttachmentBlobById(id))
+      this.item.attachmentsIds.map(id => this._fileService.getAttachmentBlobById(id))
     );
   }
 
@@ -72,9 +71,9 @@ export class PostComponent implements OnInit {
   }
 
   protected async toggleLike(){
-    const like = await this._likeService.upsertLike(this.post.id)
-    this.post.isLiked = like.isLiked;
-    this.post.likesCount = like.likesCount;
+    const like = await this._likeService.upsertLike(this.item.id)
+    this.item.isLiked = like.isLiked;
+    this.item.likesCount = like.likesCount;
   }
 
   protected toggleComments(){

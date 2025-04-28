@@ -1,0 +1,13 @@
+<div class="chat-item" (click)="toggleItem()">
+  <div class="chat-avatar">
+    <img [src]="avatarUrl || Assets.chatDefaultAvatar" [alt]="item.name">
+    <span *ngIf="true" class="unread-badge">{{99}}</span>
+  </div>
+  <div class="chat-content">
+    <div class="chat-header">
+      <h4 class="chat-name">{{item.name}}</h4>
+      <span *ngIf="item.preview" class="chat-time">{{item.preview.date | date:'HH:mm'}}</span>
+    </div>
+    <p *ngIf="item.preview" class="chat-preview">{{item.preview.text}}</p>
+  </div>
+</div>

@@ -1,6 +1,6 @@
 ﻿import {Component, EventEmitter, Output} from '@angular/core';
-import { PaginationBaseComponent } from '../pagination-base-component/pagination-base.component';
-import {Chat} from '../../../Data/Models/Chat/chat';
+import { PaginationBaseComponent } from '../pagination-base/pagination-base.component';
+import {Chat} from '../../../../Data/Models/Chat/chat';
 import {NgForOf, NgIf} from '@angular/common';
 import {ChatComponent} from '../../items/chat/chat.component';
 

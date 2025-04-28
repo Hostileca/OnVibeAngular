@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {UsersListComponent} from '../../pagination/users-list/users-list.component';
+import {UsersListComponent} from '../../pagination/lists/users-list/users-list.component';
 import {PageSettings} from '../../../Data/Models/Page/page-settings';
 import {PagedResponse} from '../../../Data/Models/Page/paged-response';
 import {User} from '../../../Data/Models/User/user';
