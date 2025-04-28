@@ -4,7 +4,6 @@ import {Chat} from '../../../Data/Models/Chat/chat';
 import {PageSettings} from '../../../Data/Models/Page/page-settings';
 import {PagedResponse} from '../../../Data/Models/Page/paged-response';
 import {Message} from '../../../Data/Models/Message/message';
-import {ChatService} from '../../../Data/Services/chat.service';
 import {MessageService} from '../../../Data/Services/message.service';
 import {ApiConfig} from '../../../Data/Constants/api';
 import {FileService} from '../../../Data/Services/file.service';

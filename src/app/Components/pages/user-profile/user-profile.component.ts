@@ -71,7 +71,7 @@ export class UserProfileComponent {
   }
 
   protected openCreatePostModal(){
-    const modalRef = this.modalService.open(CreatePostModalComponent, {
+    this.modalService.open(CreatePostModalComponent, {
       size: 'lg',
       centered: true
     });

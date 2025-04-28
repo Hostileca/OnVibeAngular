@@ -1,5 +1,4 @@
 import {AfterViewInit, Component, Input, OnChanges, OnInit} from '@angular/core';
-import {fromEvent, Observable, tap} from "rxjs";
 import {PageSettings} from '../../../../Data/Models/Page/page-settings';
 import {PagedResponse} from '../../../../Data/Models/Page/paged-response';
 
