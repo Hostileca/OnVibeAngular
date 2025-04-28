@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, Input, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {Post} from '../../../Data/Models/Post/post';
 import {FileService} from '../../../Data/Services/file.service';
 import {DatePipe, NgClass, NgForOf, NgIf} from '@angular/common';
@@ -55,10 +55,9 @@ export class PostComponent implements OnInit {
   }
 
   private async loadAttachments() {
-    const blobs = await Promise.all(
+    this.loadedAttachments = await Promise.all(
       this.post.attachmentsIds.map(id => this._fileService.getAttachmentBlobById(id))
     );
-    this.loadedAttachments = blobs;
   }
 
   protected isImage(attachment: LoadedAttachment){

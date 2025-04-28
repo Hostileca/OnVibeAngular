@@ -40,6 +40,7 @@
 
       <div *ngIf="imageAttachments.length === 1" class="text-center">
         <img [src]="imageAttachments[0].blob | blobUrl"
+             [alt]="imageAttachments[0].fileName"
              class="img-fluid rounded"
              style="max-height: 500px; max-width: 100%; object-fit: contain;">
       </div>

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import {lastValueFrom} from 'rxjs';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {addWarning} from '@angular-devkit/build-angular/src/utils/webpack-diagnostics';
 import {ApiConfig} from '../Constants/api';
 
 @Injectable({
@@ -12,30 +11,28 @@ export class FileService {
 
   public async loadImageAsDataUrl(url: string): Promise<string | null> {
     try {
-      const blob = await lastValueFrom(
+      const response = await lastValueFrom(
         this._httpClient.get(url, {
           responseType: 'blob',
           observe: 'response'
         })
       );
 
-      if (blob.status === 404) {
+      const blob = response.body;
+      if (!blob || !(blob instanceof Blob)) {
         return null;
       }
 
-      if (!(blob.body instanceof Blob)) {
-        throw new Error('Invalid response type: expected Blob');
-      }
-
-      return await this.blobToDataUrl(blob.body);
-    } catch (error) {
-      if (this.is404Error(error)) {
+      return this.blobToDataUrl(blob);
+    }
+    catch (error) {
+      if (error instanceof HttpErrorResponse && error.status === 404) {
         return null;
       }
-      console.error('Image loading failed:', error);
       throw error;
     }
   }
+
 
   public async getAttachmentBlobById(id: string): Promise<{ blob: Blob, fileName: string }> {
     const response = await lastValueFrom(
