@@ -22,8 +22,8 @@ export class ChatComponent extends ItemBaseComponent<Chat> implements OnInit {
     super();
   }
 
-  async ngOnInit() {
-    await this.loadImage()
+  ngOnInit() {
+    this.loadImage()
   }
 
   private async loadImage(){

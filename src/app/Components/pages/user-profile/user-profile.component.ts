@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, BaseRouteReuseStrategy, Router, RouteReuseStrategy} from '@angular/router';
 import {User} from '../../../Data/Models/User/user';
 import {UserService} from '../../../Data/Services/user.service';
@@ -29,12 +29,12 @@ import {SubscriptionService} from '../../../Data/Services/subscription.service';
   templateUrl: './user-profile.component.html',
   styleUrl: './user-profile.component.css'
 })
-export class UserProfileComponent {
+export class UserProfileComponent implements OnInit {
   @ViewChild(PostsListComponent) postsListComponent!: PostsListComponent;
 
   public user!: User;
   public avatarUrl: string | null = null;
-  public postsSource: (pageSettings: PageSettings) => Promise<PagedResponse<Post>>
+  public postsSource!: (pageSettings: PageSettings) => Promise<PagedResponse<Post>>
 
   public get loadedPosts(){
     if(this.postsListComponent){
@@ -53,18 +53,24 @@ export class UserProfileComponent {
               private readonly _postService: PostService,
               private readonly _subscriptionService: SubscriptionService,
               private readonly _modalService: NgbModal,
-              route: ActivatedRoute,
-              router: Router) {
-    const userId = route.snapshot.params['userId'];
-    router.
-    this.postsSource = (pageSettings: PageSettings) =>
-      this._postService.getUserPosts(this.user.id, pageSettings)
+              private readonly _route: ActivatedRoute) {
+  }
+
+  ngOnInit(): void {
+    const userId = this._route.snapshot.params['userId'];
 
     this.loadUser(userId)
+
+    this._route.paramMap.subscribe(params => {
+      const userId = params.get('userId');
+      this.loadUser(userId!);
+    });
   }
 
   private async loadUser(userId: string) {
     this.user = await this._userService.getUserById(userId);
+    this.postsSource = (pageSettings: PageSettings) =>
+      this._postService.getUserPosts(this.user.id, pageSettings)
     this.loadAvatar()
   }
 

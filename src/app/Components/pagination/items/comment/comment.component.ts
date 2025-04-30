@@ -21,8 +21,8 @@ export class CommentComponent extends ItemBaseComponent<Comment> implements OnIn
     super();
   }
 
-  async ngOnInit() {
-    await this.loadAvatar()
+  ngOnInit() {
+    this.loadAvatar()
   }
 
   private async loadAvatar(){

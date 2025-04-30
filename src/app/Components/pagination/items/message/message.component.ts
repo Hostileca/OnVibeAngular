@@ -24,9 +24,9 @@ export class MessageComponent extends ItemBaseComponent<Message> implements OnIn
     super();
   }
 
-  async ngOnInit() {
+  ngOnInit() {
     if(!this.isSystem && !this.isOutgoing){
-      await this.loadSenderAvatar()
+      this.loadSenderAvatar()
     }
   }
 

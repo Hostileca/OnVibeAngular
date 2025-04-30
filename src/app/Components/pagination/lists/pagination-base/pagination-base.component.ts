@@ -29,8 +29,8 @@ export abstract class PaginationBaseComponent<TEntity> implements OnInit, OnChan
   protected constructor() {
   }
 
-  async ngOnInit() {
-    await this.loadEntities()
+  ngOnInit() {
+    this.loadEntities()
   }
 
   //if user change chat source

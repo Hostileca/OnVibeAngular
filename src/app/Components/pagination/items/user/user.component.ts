@@ -21,8 +21,8 @@ export class UserComponent extends ItemBaseComponent<User> implements OnInit {
     super();
   }
 
-  async ngOnInit() {
-    await this.loadAvatar()
+  ngOnInit() {
+    this.loadAvatar()
   }
 
   private async loadAvatar(){

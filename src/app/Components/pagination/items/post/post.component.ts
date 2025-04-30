@@ -54,9 +54,9 @@ export class PostComponent extends ItemBaseComponent<Post> implements OnInit {
     this.commentsSource = (pageSettings: PageSettings) => this._commentService.getPostComments(this.item.id, pageSettings);
   }
 
-  async ngOnInit() {
-    await this.loadOwnerAvatar();
-    await this.loadAttachments();
+  ngOnInit() {
+    this.loadOwnerAvatar();
+    this.loadAttachments();
   }
 
   private async loadOwnerAvatar(){
