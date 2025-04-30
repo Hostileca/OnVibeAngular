@@ -13,8 +13,7 @@ import {FileService} from './file.service';
   providedIn: 'root'
 })
 export class PostService {
-  constructor(private readonly _httpClient: HttpClient,
-              private readonly _fileService: FileService) {}
+  constructor(private readonly _httpClient: HttpClient) {}
 
   public async getUserPosts(userId: string, pageSettings: PageSettings): Promise<PagedResponse<Post>> {
     let params = new HttpParams();

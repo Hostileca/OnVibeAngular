@@ -1,5 +1,5 @@
 import {Component, ViewChild} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, BaseRouteReuseStrategy, Router, RouteReuseStrategy} from '@angular/router';
 import {User} from '../../../Data/Models/User/user';
 import {UserService} from '../../../Data/Services/user.service';
 import {DatePipe, NgIf} from '@angular/common';
@@ -16,6 +16,7 @@ import {PaginationConfig} from '../../../Data/Constants/pagination-configs';
 import {AuthService} from '../../../Data/Services/auth.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {CreatePostModalComponent} from '../../modals/create-post/create-post-modal.component';
+import {SubscriptionService} from '../../../Data/Services/subscription.service';
 
 @Component({
   selector: 'app-user-profile',
@@ -42,14 +43,20 @@ export class UserProfileComponent {
     return [];
   }
 
+  protected get isCurrentUser(){
+    return this._authService.userInfo?.id == this.user.id
+  }
+
   constructor(private readonly _authService: AuthService,
               private readonly _userService: UserService,
               private readonly _fileService: FileService,
               private readonly _postService: PostService,
-              private readonly modalService: NgbModal,
-              route: ActivatedRoute) {
+              private readonly _subscriptionService: SubscriptionService,
+              private readonly _modalService: NgbModal,
+              route: ActivatedRoute,
+              router: Router) {
     const userId = route.snapshot.params['userId'];
-
+    router.
     this.postsSource = (pageSettings: PageSettings) =>
       this._postService.getUserPosts(this.user.id, pageSettings)
 
@@ -61,20 +68,27 @@ export class UserProfileComponent {
     this.loadAvatar()
   }
 
-  private async loadAvatar(){
-    const url = `${ApiConfig.BaseUrl}/users/${this.user.id}/avatar`;
-    this.avatarUrl = await this._fileService.loadImageAsDataUrl(url)
-  }
-
-  protected get isCurrentUser(){
-    return this._authService.userInfo?.id == this.user.id
-  }
-
   protected openCreatePostModal(){
-    this.modalService.open(CreatePostModalComponent, {
+    this._modalService.open(CreatePostModalComponent, {
       size: 'lg',
       centered: true
     });
+  }
+
+  protected async toggleSubscription() {
+    const subscription = await this._subscriptionService.upsertSubscription(this.user.id);
+    this.user.isSubscribed = subscription.isSubscribed;
+    if(subscription.isSubscribed){
+      this.user.subscribersCount++;
+    }
+    else{
+      this.user.subscribersCount--;
+    }
+  }
+
+  private async loadAvatar(){
+    const url = `${ApiConfig.BaseUrl}/users/${this.user.id}/avatar`;
+    this.avatarUrl = await this._fileService.loadImageAsDataUrl(url);
   }
 
   protected readonly Assets = Assets;

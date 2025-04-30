@@ -3,4 +3,5 @@
   ChatsLoadingSize: 10,
   UsersLoadingSize: 10,
   MessagesLoadingSize: 30,
+  CommentsLoadingSize: 30,
 }

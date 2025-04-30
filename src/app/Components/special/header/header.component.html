@@ -23,7 +23,7 @@
         Profile
       </button>
       <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-        <li><a class="dropdown-item" routerLink="users/{{user.id}}">My Profile</a></li>
+        <li><a class="dropdown-item" [routerLink]="['/users', this.user.id]">My Profile</a></li>
         <li><hr class="dropdown-divider"></li>
         <li><a class="dropdown-item text-danger">Logout</a></li>
       </ul>

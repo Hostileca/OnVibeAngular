@@ -10,6 +10,12 @@ import {LoadedAttachment} from '../../../../Data/Models/Attachment/loaded-attach
 import {BlobUrlPipe} from '../../../../Data/Pipes/blob-url.pipe';
 import {LikeService} from '../../../../Data/Services/like.service';
 import {ItemBaseComponent} from '../item-base/item-base.component';
+import {CommentsListComponent} from '../../lists/comments-list/comments-list.component';
+import {PaginationConfig} from '../../../../Data/Constants/pagination-configs';
+import {PagedResponse} from '../../../../Data/Models/Page/paged-response';
+import {Comment} from '../../../../Data/Models/Comment/comment';
+import {PageSettings} from '../../../../Data/Models/Page/page-settings';
+import {CommentService} from '../../../../Data/Services/comment.service';
 
 @Component({
   selector: 'app-post',
@@ -21,7 +27,8 @@ import {ItemBaseComponent} from '../item-base/item-base.component';
     NgbCarouselModule,
     NgClass,
     FileSizePipe,
-    BlobUrlPipe
+    BlobUrlPipe,
+    CommentsListComponent
   ],
   templateUrl: './post.component.html',
   styleUrl: './post.component.css'
@@ -29,6 +36,8 @@ import {ItemBaseComponent} from '../item-base/item-base.component';
 export class PostComponent extends ItemBaseComponent<Post> implements OnInit {
   public ownerAvatarUrl: string | null = null;
   public loadedAttachments: LoadedAttachment[] = [];
+  public commentsSource: (pageSettings: PageSettings) => Promise<PagedResponse<Comment>>;
+  public showComment: boolean = false;
 
   protected get imageAttachments() {
     return this.loadedAttachments.filter(attachment => this.isImage(attachment)) || [];
@@ -39,8 +48,10 @@ export class PostComponent extends ItemBaseComponent<Post> implements OnInit {
   }
 
   constructor(private readonly _fileService: FileService,
-              private readonly _likeService: LikeService) {
+              private readonly _likeService: LikeService,
+              private readonly _commentService: CommentService) {
     super();
+    this.commentsSource = (pageSettings: PageSettings) => this._commentService.getPostComments(this.item.id, pageSettings);
   }
 
   async ngOnInit() {
@@ -77,7 +88,9 @@ export class PostComponent extends ItemBaseComponent<Post> implements OnInit {
   }
 
   protected toggleComments(){
+    this.showComment = !this.showComment;
   }
 
   protected readonly Assets = Assets;
+  protected readonly PaginationConfig = PaginationConfig;
 }

@@ -7,4 +7,7 @@ export interface User {
   dateOfBirth?: Date;
   city?: string;
   postsCount: number;
+  subscribersCount: number;
+  subscriptionsCount: number;
+  isSubscribed: boolean;
 }
