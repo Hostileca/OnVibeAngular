@@ -7,6 +7,7 @@ import {UsersSearchCriteria} from '../Models/User/users-search-criteria';
 import {PagedResponse} from '../Models/Page/paged-response';
 import {HttpHelper} from '../../Helpers/http-helper';
 import {PageSettings} from '../Models/Page/page-settings';
+import {UpdateUser} from '../Models/User/update-user';
 
 @Injectable({
   providedIn: 'root'
@@ -33,5 +34,19 @@ export class UserService {
     }
 
     return await lastValueFrom(this._httpClient.get<PagedResponse<User>>(`${ApiConfig.BaseUrl}/users`, { params }))
+  }
+
+  public async updateUser(userId: string, updateUser: UpdateUser): Promise<User> {
+    let formData = new FormData();
+    formData.append('bio', updateUser.bio);
+    formData.append('avatar', updateUser.avatar);
+    if(updateUser.dateOfBirth){
+      const date = new Date(updateUser.dateOfBirth)
+      formData.append('dateOfBirth', date.toISOString());
+    }
+    formData.append('country', updateUser.country);
+    formData.append('city', updateUser.city);
+
+    return await lastValueFrom(this._httpClient.put<User>(`${ApiConfig.BaseUrl}/users/${userId}`, formData))
   }
 }

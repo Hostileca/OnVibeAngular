@@ -1,0 +1,13 @@
+<div class="modal-content p-4">
+  <div class="modal-header border-0 p-0 mb-4">
+    <h5 class="modal-title fw-bold">{{title}}</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="close()"></button>
+  </div>
+
+  <div class="modal-body p-0">
+    <app-subscriptions-list
+      [entitySource]="subscriptionsSource"
+      [pageSize]="PaginationConfig.SubscriptionsLoadingSize">
+    </app-subscriptions-list>
+  </div>
+</div>

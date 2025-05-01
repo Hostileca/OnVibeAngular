@@ -8,23 +8,18 @@
              style="width: 150px; height: 150px; object-fit: cover;">
         <h3 class="mb-0">{{ user.username }}</h3>
         <div *ngIf="!isCurrentUser" class="mt-3">
-
-          <button  class="btn btn-primary" (click)="toggleSubscription()">
-            <div *ngIf="!user.isSubscribed">
-              <i class="bi bi-person-plus"></i> Subscribe
-            </div>
-            <div *ngIf="user.isSubscribed">
-              <i class="bi bi-person-dash"></i> Unsubscribe
-            </div>
+          <button class="btn btn-primary" (click)="toggleSubscription()">
+            <i class="bi" [class.bi-person-plus]="!user.isSubscribed" [class.bi-person-dash]="user.isSubscribed"></i>
+            {{ user.isSubscribed ? 'Unsubscribe' : 'Subscribe' }}
           </button>
         </div>
 
         <div class="d-flex justify-content-center gap-3 mt-3">
-          <div class="text-center">
+          <div class="text-center clickable-block" (click)="openSubscribersList()">
             <div class="fw-bold">{{ user.subscribersCount || 0 }}</div>
             <div class="text-muted small">Subscribers</div>
           </div>
-          <div class="text-center">
+          <div class="text-center clickable-block" (click)="openSubscriptionsList()">
             <div class="fw-bold">{{ user.subscriptionsCount || 0 }}</div>
             <div class="text-muted small">Subscriptions</div>
           </div>
@@ -37,16 +32,17 @@
             <div>
               <span class="text-muted">Member since {{ user.createdAt | date:'mediumDate' }}</span>
             </div>
-            <button class="btn btn-outline-primary">Edit Profile</button>
+            <button *ngIf="isCurrentUser" class="btn btn-outline-primary" [routerLink]="['/users', user.id, 'edit']">Edit Profile</button>
           </div>
 
           <div class="row mb-3">
             <div class="col-md-6">
               <p *ngIf="user.dateOfBirth"><strong>Age:</strong> {{ user.dateOfBirth | age }} </p>
+              <p *ngIf="user.city"><strong>Country:</strong> {{ user.country }}</p>
               <p *ngIf="user.city"><strong>City:</strong> {{ user.city }}</p>
             </div>
             <div class="col-md-6">
-              <p><strong>Birthday:</strong> {{ user.dateOfBirth | date:'mediumDate' }}</p>
+              <p *ngIf="user.dateOfBirth"><strong>Birthday:</strong> {{ user.dateOfBirth | date:'MMM d, y, HH:mm' }}</p>
             </div>
           </div>
 
@@ -62,7 +58,6 @@
   <div class="posts-section">
     <div class="d-flex justify-content-between align-items-center mb-4">
       <h4 class="mb-0">Posts ({{user.postsCount}})</h4>
-
       <button *ngIf="isCurrentUser"
               class="btn btn-primary"
               (click)="openCreatePostModal()">

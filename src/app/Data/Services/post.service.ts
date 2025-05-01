@@ -7,7 +7,6 @@ import {lastValueFrom} from 'rxjs';
 import {ApiConfig} from '../Constants/api';
 import {Post} from '../Models/Post/post';
 import {CreatePost} from '../Models/Post/create-post';
-import {FileService} from './file.service';
 
 @Injectable({
   providedIn: 'root'
@@ -22,13 +21,13 @@ export class PostService {
     return await lastValueFrom(this._httpClient.get<PagedResponse<Post>>(`${ApiConfig.BaseUrl}/posts`, {params}));
   }
 
-  public async createPost(post: CreatePost): Promise<Post> {
+  public async createPost(createPost: CreatePost): Promise<Post> {
     let formData = new FormData();
-    if(post.content){
-      formData.append('content', post.content);
+    if(createPost.content){
+      formData.append('content', createPost.content);
     }
-    if(post.attachments){
-      for (const attachment of post.attachments){
+    if(createPost.attachments){
+      for (const attachment of createPost.attachments){
         formData.append('attachments', attachment);
       }
     }

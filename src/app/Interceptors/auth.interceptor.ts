@@ -17,7 +17,7 @@ export const authInterceptor: HttpInterceptorFn = (httpRequest, next) => {
 
   return next(AddAccessToken(httpRequest, tokens.accessToken.value)).pipe(
     catchError((error: HttpErrorResponse) => {
-      if (error.status === 403 || error.status === 401) {
+      if (error.status === 401) {
         return HandleTokenRefresh(authService, httpRequest, next);
       }
       return throwError(error);

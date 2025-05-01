@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute, BaseRouteReuseStrategy, Router, RouteReuseStrategy} from '@angular/router';
+import {ActivatedRoute, BaseRouteReuseStrategy, Router, RouteReuseStrategy, RouterLink} from '@angular/router';
 import {User} from '../../../Data/Models/User/user';
 import {UserService} from '../../../Data/Services/user.service';
 import {DatePipe, NgIf} from '@angular/common';
@@ -17,6 +17,7 @@ import {AuthService} from '../../../Data/Services/auth.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {CreatePostModalComponent} from '../../modals/create-post/create-post-modal.component';
 import {SubscriptionService} from '../../../Data/Services/subscription.service';
+import {SubscriptionsInfoComponent} from '../../modals/subscriptions-info/subscriptions-info.component';
 
 @Component({
   selector: 'app-user-profile',
@@ -24,7 +25,8 @@ import {SubscriptionService} from '../../../Data/Services/subscription.service';
     NgIf,
     DatePipe,
     AgePipe,
-    PostsListComponent
+    PostsListComponent,
+    RouterLink
   ],
   templateUrl: './user-profile.component.html',
   styleUrl: './user-profile.component.css'
@@ -67,13 +69,6 @@ export class UserProfileComponent implements OnInit {
     });
   }
 
-  private async loadUser(userId: string) {
-    this.user = await this._userService.getUserById(userId);
-    this.postsSource = (pageSettings: PageSettings) =>
-      this._postService.getUserPosts(this.user.id, pageSettings)
-    this.loadAvatar()
-  }
-
   protected openCreatePostModal(){
     this._modalService.open(CreatePostModalComponent, {
       size: 'lg',
@@ -92,9 +87,33 @@ export class UserProfileComponent implements OnInit {
     }
   }
 
+  protected async openSubscribersList() {
+    const modalRef = this._modalService.open(SubscriptionsInfoComponent, {
+      size: 'lg',
+      centered: true
+    });
+    modalRef.componentInstance.subscriptionsSource = (pageSettings: PageSettings) => this._subscriptionService.getSubscribers(this.user.id, pageSettings);
+    modalRef.componentInstance.title = "Subscribers";
+  }
+
+  protected async openSubscriptionsList() {
+    const modalRef = this._modalService.open(SubscriptionsInfoComponent, {
+      size: 'lg',
+      centered: true
+    });
+    modalRef.componentInstance.subscriptionsSource = (pageSettings: PageSettings) => this._subscriptionService.getSubscriptions(this.user.id, pageSettings);
+  }
+
   private async loadAvatar(){
     const url = `${ApiConfig.BaseUrl}/users/${this.user.id}/avatar`;
     this.avatarUrl = await this._fileService.loadImageAsDataUrl(url);
+  }
+
+  private async loadUser(userId: string) {
+    this.user = await this._userService.getUserById(userId);
+    this.postsSource = (pageSettings: PageSettings) =>
+      this._postService.getUserPosts(this.user.id, pageSettings)
+    this.loadAvatar()
   }
 
   protected readonly Assets = Assets;

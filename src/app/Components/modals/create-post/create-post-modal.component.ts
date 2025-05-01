@@ -26,7 +26,7 @@ export class CreatePostModalComponent {
   protected isSubmitting = false;
 
   constructor(private readonly _postService: PostService,
-              public activeModal: NgbActiveModal) {}
+              private readonly _activeModal: NgbActiveModal) {}
 
   public get isAttachmentsLoaded(){
     const files = this.postForm.get('attachments')?.value;
@@ -67,10 +67,10 @@ export class CreatePostModalComponent {
     this.isSubmitting = true;
 
     await this._postService.createPost(this.postForm.value)
-    this.activeModal.close();
+    this._activeModal.close();
   }
 
-  public cancel() {
-    this.activeModal.close();
+  public close() {
+    this._activeModal.close();
   }
 }

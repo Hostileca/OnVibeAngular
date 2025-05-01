@@ -4,8 +4,9 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'age'
 })
 export class AgePipe implements PipeTransform {
-  transform(birthDate: Date): unknown {
+  transform(date: Date): number {
     const today = new Date();
+    const birthDate = new Date(date)
 
     let age = today.getFullYear() - birthDate.getFullYear();
     const monthDiff = today.getMonth() - birthDate.getMonth();

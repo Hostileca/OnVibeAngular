@@ -21,6 +21,22 @@
   }
 }
 
+.clickable-block {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+.clickable-block:hover {
+  background-color: #f5f5f5;
+  transform: translateY(-2px);
+}
+
+.clickable-block:active {
+  transform: translateY(0);
+}
+
 @media (max-width: 768px) {
   .card-body {
     padding: 1rem;
