@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import {NgForOf} from "@angular/common";
-import {PostComponent} from "../../items/post/post.component";
 import {UserComponent} from '../../items/user/user.component';
 import {PaginationBaseComponent} from '../pagination-base/pagination-base.component';
 import {Subscription} from '../../../../Data/Models/Subscription/subscription';

@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute, BaseRouteReuseStrategy, Router, RouteReuseStrategy, RouterLink} from '@angular/router';
+import {ActivatedRoute, RouterLink} from '@angular/router';
 import {User} from '../../../Data/Models/User/user';
 import {UserService} from '../../../Data/Services/user.service';
 import {DatePipe, NgIf} from '@angular/common';

@@ -4,7 +4,7 @@ export interface User {
   bio: string | null;
   createdAt: Date;
   role: number;
-  dateOfBirth: Date | null;
+  dateOfBirth: string | null;
   city: string | null;
   country: string | null;
   postsCount: number;
