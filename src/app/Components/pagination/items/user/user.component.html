@@ -1,18 +1,26 @@
-<a [routerLink]="['/users', item.id]"
-  class="list-group-item list-group-item-action"
->
+<a [routerLink]="!onSelect.observed ? ['/users', item.id] : null"
+   (click)="handleClick($event)"
+   class="list-group-item list-group-item-action"
+   [class.bg-light]="isSelected"
+   [class.border-start]="isSelected"
+   [class.border-start-3]="isSelected"
+   [class.border-primary]="isSelected"
+   [class.user-hover]="!isSelected">
   <div class="d-flex align-items-center">
     <img
       [src]="avatarUrl || Assets.userDefaultAvatar"
       class="rounded-circle me-3"
+      [class.border]="isSelected"
+      [class.border-2]="isSelected"
+      [class.border-primary]="isSelected"
       width="50"
       height="50"
       alt="User avatar"
     >
     <div>
-      <h5 class="mb-1">{{ item.username }}</h5>
-      <small class="text-muted">
-        {{ item.city }}{{ item.city && item.city ? ', ' : '' }}{{ item.city }}
+      <h5 class="mb-1" [class.text-primary]="isSelected">{{ item.username }}</h5>
+      <small [class.text-primary]="isSelected" [class.text-muted]="!isSelected">
+        {{ item.city }}{{ item.city && item.country ? ', ' : '' }}{{ item.country }}
       </small>
     </div>
   </div>

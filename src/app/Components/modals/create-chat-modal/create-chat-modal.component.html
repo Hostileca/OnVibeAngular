@@ -1,0 +1,41 @@
+<form class="modal-body" [formGroup]="chatForm" (ngSubmit)="onSubmit()">
+  <div class="mb-3">
+    <label for="chatName" class="form-label">Chat Name</label>
+    <input type="text" class="form-control" id="chatName" formControlName="name"
+           placeholder="Enter chat name">
+    <div *ngIf="chatForm.controls.name.invalid && chatForm.controls.name.dirty"
+         class="text-danger small mt-1">
+      Chat name is required (max 1000 chars)
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Select Participants</label>
+    <div class="form-control p-0" style="height: 200px; overflow-y: auto;">
+      <app-user
+        *ngFor="let user of availableUsers"
+        [item]="user"
+        (onSelect)="toggleUserSelection(user.id)">
+      </app-user>
+    </div>
+    <div *ngIf="chatForm.controls.userIds.invalid && chatForm.controls.userIds.dirty"
+         class="text-danger small mt-1">
+      Select at least one participant
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label for="chatImage" class="form-label">Chat Image (Optional)</label>
+    <input type="file" class="form-control" id="chatImage"
+           accept="image/*" (change)="onFileSelected($event)">
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="close()">Cancel</button>
+    <button type="submit" class="btn btn-primary" [disabled]="chatForm.invalid || isLoading">
+      <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-1"></span>
+      Create Chat
+    </button>
+  </div>
+</form>
+

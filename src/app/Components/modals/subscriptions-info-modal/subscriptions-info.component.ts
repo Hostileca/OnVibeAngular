@@ -5,6 +5,7 @@ import {SubscriptionsListComponent} from '../../pagination/lists/subscriptions-l
 import {PaginationConfig} from '../../../Data/Constants/pagination-configs';
 import {Subscription} from '../../../Data/Models/Subscription/subscription';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+import {ModalBaseComponent} from '../modal-base/modal-base.component';
 
 @Component({
   selector: 'app-subscriptions-info',
@@ -14,15 +15,12 @@ import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
   templateUrl: './subscriptions-info.component.html',
   styleUrl: './subscriptions-info.component.css'
 })
-export class SubscriptionsInfoComponent {
+export class SubscriptionsInfoComponent extends ModalBaseComponent {
   public title: string = 'Subscriptions';
   public subscriptionsSource!: (pageSettings: PageSettings) => Promise<PagedResponse<Subscription>>
 
-  constructor(private readonly _activeModal: NgbActiveModal) {
-  }
-
-  public close() {
-    this._activeModal.close();
+  constructor(activeModal: NgbActiveModal) {
+    super(activeModal);
   }
 
   protected readonly PaginationConfig = PaginationConfig;

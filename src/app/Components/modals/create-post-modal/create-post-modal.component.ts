@@ -4,6 +4,7 @@ import {PostService} from '../../../Data/Services/post.service';
 import {NgClass, NgForOf, NgIf} from '@angular/common';
 import {FileSizePipe} from '../../../Data/Pipes/file-size.pipe';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+import {ModalBaseComponent} from '../modal-base/modal-base.component';
 
 @Component({
   selector: 'app-create-post',
@@ -17,7 +18,7 @@ import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
   templateUrl: './create-post-modal.component.html',
   styleUrl: './create-post-modal.component.css'
 })
-export class CreatePostModalComponent {
+export class CreatePostModalComponent extends ModalBaseComponent {
   protected postForm = new FormGroup({
     content: new FormControl('', [Validators.maxLength(1000)]),
     attachments: new FormControl<File[]>([])
@@ -26,7 +27,9 @@ export class CreatePostModalComponent {
   protected isSubmitting = false;
 
   constructor(private readonly _postService: PostService,
-              private readonly _activeModal: NgbActiveModal) {}
+              activeModal: NgbActiveModal) {
+    super(activeModal)
+  }
 
   public get isAttachmentsLoaded(){
     const files = this.postForm.get('attachments')?.value;
@@ -67,10 +70,6 @@ export class CreatePostModalComponent {
     this.isSubmitting = true;
 
     await this._postService.createPost(this.postForm.value)
-    this._activeModal.close();
-  }
-
-  public close() {
-    this._activeModal.close();
+    this.close();
   }
 }

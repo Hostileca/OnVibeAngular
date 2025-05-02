@@ -15,9 +15,9 @@ import {PostsListComponent} from '../../pagination/lists/posts-list/posts-list.c
 import {PaginationConfig} from '../../../Data/Constants/pagination-configs';
 import {AuthService} from '../../../Data/Services/auth.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {CreatePostModalComponent} from '../../modals/create-post/create-post-modal.component';
+import {CreatePostModalComponent} from '../../modals/create-post-modal/create-post-modal.component';
 import {SubscriptionService} from '../../../Data/Services/subscription.service';
-import {SubscriptionsInfoComponent} from '../../modals/subscriptions-info/subscriptions-info.component';
+import {SubscriptionsInfoComponent} from '../../modals/subscriptions-info-modal/subscriptions-info.component';
 
 @Component({
   selector: 'app-user-profile',

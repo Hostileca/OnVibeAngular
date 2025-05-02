@@ -1,0 +1,12 @@
+.list-group-item {
+  transition: all 0.15s ease-in-out;
+}
+
+.user-hover:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+  cursor: pointer;
+}
+
+.bg-light:hover {
+  background-color: #e9f2ff !important;
+}

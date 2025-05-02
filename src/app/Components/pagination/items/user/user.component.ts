@@ -9,7 +9,7 @@ import {ItemBaseComponent} from '../item-base/item-base.component';
 @Component({
   selector: 'app-user',
   imports: [
-    RouterLink
+    RouterLink,
   ],
   templateUrl: './user.component.html',
   styleUrl: './user.component.css'
