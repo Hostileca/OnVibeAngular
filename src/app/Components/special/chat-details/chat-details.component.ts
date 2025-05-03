@@ -10,11 +10,11 @@ import {FileService} from '../../../Data/Services/file.service';
 import {MessageInputComponent} from '../message-input/message-input.component';
 import {MessagesListComponent} from '../../pagination/lists/messages-list/messages-list.component';
 import {PaginationConfig} from '../../../Data/Constants/pagination-configs';
+import { Assets } from '../../../Data/Constants/assets';
 
 @Component({
   selector: 'app-chat-details',
   imports: [
-    NgIf,
     MessageInputComponent,
     MessagesListComponent,
   ],
@@ -48,4 +48,5 @@ export class ChatDetailsComponent {
   }
 
   protected readonly PaginationConfig = PaginationConfig;
+  protected readonly Assets = Assets;
 }

@@ -1,31 +1,36 @@
-<div class="chat-container d-flex h-100">
-  <div class="chat-list-column border-end bg-light">
-    <div class="chat-list-header p-3 d-flex justify-content-between align-items-center border-bottom">
-      <h5 class="mb-0 fw-semibold">Chats</h5>
-      <button class="btn btn-sm btn-outline-primary rounded-circle" (click)="openCreateChatModal()">
-        <i class="bi bi-pencil"></i>
-      </button>
-    </div>
-
-    <app-chats-list
-      [entitySource]="chatsSource"
-      [pageSize]="PaginationConfig.ChatsLoadingSize"
-      (onSelectChat)="selectChat($event)"
-      class="chat-list-scrollable">
-    </app-chats-list>
-  </div>
-
-  <div class="chat-content-column flex-grow-1" *ngIf="selectedChat; else emptyState">
-    <app-chat-details [selectedChat]="this.selectedChat"></app-chat-details>
-  </div>
-
-  <ng-template #emptyState>
-    <div class="empty-state d-flex flex-column justify-content-center align-items-center h-100">
-      <div class="empty-icon text-muted mb-3">
-        <i class="bi bi-chat-left-text" style="font-size: 3rem;"></i>
+<div class="container-fluid h-100 p-0">
+  <div class="row g-0 h-100">
+    <div class="col-md-4 col-lg-3 h-100 d-flex flex-column border-end bg-light">
+      <div class="d-flex justify-content-between align-items-center p-3 border-bottom">
+        <h5 class="mb-0 fw-semibold">Chats</h5>
+        <button class="btn btn-sm btn-outline-primary rounded-circle"
+                (click)="openCreateChatModal()">
+          <i class="bi bi-pencil"></i>
+        </button>
       </div>
-      <h4 class="mb-2">Select chat</h4>
-      <p class="text-muted text-center">Select chat to start chatting</p>
+
+      <div class="flex-grow-1 overflow-auto">
+        <app-chats-list [entitySource]="chatsSource"
+                        [pageSize]="PaginationConfig.ChatsLoadingSize"
+                        (onSelectChat)="selectChat($event)">
+        </app-chats-list>
+      </div>
     </div>
-  </ng-template>
+
+    <div class="col-md-8 col-lg-9 h-100 d-flex flex-column">
+      <ng-container *ngIf="selectedChat; else emptyState">
+        <app-chat-details [selectedChat]="selectedChat" class="flex-grow-1 d-flex flex-column h-100"></app-chat-details>
+      </ng-container>
+
+      <ng-template #emptyState>
+        <div class="h-100 d-flex flex-column justify-content-center align-items-center bg-light">
+          <div class="text-muted mb-3">
+            <i class="bi bi-chat-left-text fs-1"></i>
+          </div>
+          <h4 class="mb-2">Select chat</h4>
+          <p class="text-muted text-center px-3">Choose a chat from the list to start messaging</p>
+        </div>
+      </ng-template>
+    </div>
+  </div>
 </div>

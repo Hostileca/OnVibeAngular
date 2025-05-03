@@ -1,0 +1,12 @@
+:host {
+  display: block;
+  height: 100vh;
+}
+
+.app-container {
+  min-height: 100%;
+}
+
+.router-container {
+  min-height: 0;
+}

@@ -1,29 +1,38 @@
-<div class="chat-details">
-  <div class="chat-header">
-    <button class="btn-back d-md-none">
-      <i class="bi bi-arrow-left"></i>
+<div class="d-flex flex-column h-100 bg-light">
+  <div class="chat-header d-flex align-items-center p-3 bg-white border-bottom">
+    <button class="btn btn-link text-primary d-md-none me-2 p-0">
+      <i class="bi bi-arrow-left fs-4"></i>
     </button>
 
-    <div class="chat-info" *ngIf="chat">
-      <div class="avatar-container">
-        <img [src]="avatarUrl" [alt]="'avatar'" class="avatar">
+    <div class="d-flex align-items-center flex-grow-1">
+      <div class="rounded-circle overflow-hidden me-3" style="width: 40px; height: 40px;">
+        <img [src]="avatarUrl || Assets.chatDefaultAvatar"
+             alt="Chat avatar"
+             class="w-100 h-100 object-fit-cover">
       </div>
-      <div class="chat-meta">
-        <h5 class="chat-name">{{this.chat.name}}</h5>
+
+      <div>
+        <h5 class="mb-0 fw-semibold fs-6">{{chat.name}}</h5>
       </div>
     </div>
 
-    <div class="chat-actions">
-      <button class="btn-action">
-        <i class="bi bi-search"></i>
+    <div class="d-flex">
+      <button class="btn btn-link text-muted p-1 ms-2">
+        <i class="bi bi-search fs-5"></i>
       </button>
-      <button class="btn-action">
-        <i class="bi bi-three-dots-vertical"></i>
+      <button class="btn btn-link text-muted p-1 ms-2">
+        <i class="bi bi-three-dots-vertical fs-5"></i>
       </button>
     </div>
   </div>
 
-  <app-messages-list [entitySource]="messagesSource" [pageSize]="PaginationConfig.MessagesLoadingSize"></app-messages-list>
+  <div class="flex-grow-1 overflow-auto">
+    <app-messages-list [entitySource]="messagesSource"
+                       [pageSize]="PaginationConfig.MessagesLoadingSize">
+    </app-messages-list>
+  </div>
 
-  <app-message-input [targetChatId]="this.chat.id"></app-message-input>
+  <div class="border-top bg-white">
+    <app-message-input [targetChatId]="chat.id"></app-message-input>
+  </div>
 </div>
