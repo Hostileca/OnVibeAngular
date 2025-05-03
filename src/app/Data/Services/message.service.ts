@@ -23,9 +23,8 @@ export class MessageService {
 
   public async sendMessage(message: SendMessage): Promise<Message> {
     let formData = new FormData();
-    if(message.text){
-      formData.append('text', message.text);
-    }
+    formData.append('text', message.text);
+    formData.append('chatId', message.chatId);
     return await lastValueFrom(this._httpClient.post<Message>(`${ApiConfig.BaseUrl}/messages`, formData));
   }
 }

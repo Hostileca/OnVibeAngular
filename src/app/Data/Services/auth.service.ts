@@ -19,7 +19,7 @@ export class AuthService {
   public userInfo: User | null = null
   public tokens: TokensResponse | null = null
 
-  public isAuth(): boolean{
+  public get isAuth(): boolean{
     return !!this.tokens
   }
 
