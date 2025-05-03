@@ -28,6 +28,7 @@
 
   <div class="flex-grow-1 overflow-auto">
     <app-messages-list [entitySource]="messagesSource"
+                       [chat]="chat"
                        [pageSize]="PaginationConfig.MessagesLoadingSize">
     </app-messages-list>
   </div>

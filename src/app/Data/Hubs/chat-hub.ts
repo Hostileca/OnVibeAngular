@@ -1,11 +1,11 @@
 import {AuthService} from '../Services/auth.service';
 import {IHttpConnectionOptions} from '@microsoft/signalr';
 import * as signalR from '@microsoft/signalr';
-import {ApiConfig} from '../Constants/api';
 import {Events} from './events';
 import {Message} from '../Models/Message/message';
 import {EventBusService} from '../Services/event-bus.service';
 import {Injectable} from '@angular/core';
+import {ApiConfig} from '../Constants/api';
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +31,7 @@ export class ChatHub {
     };
 
     this._hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(`/hubs/chats`, options)
+      .withUrl(`${ApiConfig.HubsBaseUrl}/hubs/chats`, options)
       .build()
 
     this.startConnection();
@@ -41,12 +41,12 @@ export class ChatHub {
     this._hubConnection
       .start()
       .then(() => {
-        this.StartEmit()
+        this.startEmit()
       })
       .catch(err => console.error('Error while starting connection: ' + err));
   }
 
-  private StartEmit(){
+  private startEmit(){
     this._hubConnection.on(Events.MessageSent, (message: Message) => {
       this._eventBusService.Emit(Events.MessageSent, message)
     })
