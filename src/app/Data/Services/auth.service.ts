@@ -33,8 +33,7 @@ export class AuthService {
   public async login(loginRequest: LoginRequest){
     const tokensResponse = await lastValueFrom(this._httpClient.post<TokensResponse>(`${ApiConfig.BaseUrl}/users/login`, loginRequest));
     this.saveTokens(tokensResponse)
-    const userInfo = await lastValueFrom(this._httpClient.get<User>(`${ApiConfig.BaseUrl}/users/me`));
-    this.saveUserInfo(userInfo)
+    await this.refreshCurrentUserInfo()
   }
 
   public async register(registerRequest: RegisterRequest){
@@ -77,6 +76,11 @@ export class AuthService {
   private loadCookies(){
     this.tokens = this._appCookieService.get<TokensResponse>(CookiesName.Tokens)
     this.userInfo = this._appCookieService.get<User>(CookiesName.UserInfo)
+  }
+
+  public async refreshCurrentUserInfo(){
+    const userInfo = await lastValueFrom(this._httpClient.get<User>(`${ApiConfig.BaseUrl}/users/me`));
+    this.saveUserInfo(userInfo)
   }
 }
 

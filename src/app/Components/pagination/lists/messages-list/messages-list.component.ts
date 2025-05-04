@@ -27,13 +27,9 @@ export class MessagesListComponent extends PaginationBaseComponent<Message> {
 
   private startListening(){
     this._eventBusService.On<Message>(Events.MessageSent).subscribe(message => {
-      this.onMessageReceive(message)
+      if (this.chat && message.chatId == this.chat.id){
+        this.entities.push(message)
+      }
     })
-  }
-
-  private onMessageReceive(message: Message){
-    if (this.chat && message.chatId == this.chat.id){
-      this.entities.push(message)
-    }
   }
 }

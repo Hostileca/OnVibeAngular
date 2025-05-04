@@ -43,6 +43,7 @@ export class CreateChatComponent extends ModalBaseComponent implements OnInit {
   }
 
   private async loadAvailableUsers() {
+    await this._authService.refreshCurrentUserInfo();
     const currentUser = this._authService.userInfo!;
     const [subscribers, subscriptions] = await Promise.all([
       this._subscriptionService.getSubscribers(currentUser.id, { pageNumber: 1, pageSize: currentUser.subscribersCount }),
