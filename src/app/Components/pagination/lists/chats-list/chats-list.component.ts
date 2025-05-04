@@ -1,4 +1,4 @@
-﻿import {ChangeDetectorRef, Component, EventEmitter, Output} from '@angular/core';
+﻿import {Component, EventEmitter, Output} from '@angular/core';
 import { PaginationBaseComponent } from '../pagination-base/pagination-base.component';
 import {Chat} from '../../../../Data/Models/Chat/chat';
 import {AsyncPipe, NgForOf, NgIf} from '@angular/common';
@@ -31,11 +31,6 @@ export class ChatsListComponent extends PaginationBaseComponent<Chat> {
     this.onSelectChat.emit(chat);
   }
 
-  protected override onLoadEntities(entities: Chat[]) {
-    super.onLoadEntities(entities);
-    this.sort();
-  }
-
   private startListening() {
     this._eventBusService.On<Chat>(Events.ChatAdded).subscribe(chat => {
       const current = this._entities$.value;
@@ -49,9 +44,13 @@ export class ChatsListComponent extends PaginationBaseComponent<Chat> {
   }
 
   private sort() {
-    const sorted = [...this._entities$.value].sort((a, b) =>
-      new Date(b.preview.date).getTime() - new Date(a.preview.date).getTime()
-    );
+    const sorted = [...this._entities$.value].sort((a, b) => {
+      const dateA = new Date(a.preview.date);
+      const dateB = new Date(b.preview.date);
+
+      return dateA.getTime() - dateB.getTime();
+    });
+
     this._entities$.next(sorted);
   }
 }
