@@ -1,6 +1,3 @@
-<div class="messages-container d-flex flex-column-reverse"
-     #listContainer>
-  <app-message *ngFor="let message of entities$ | async"
-               [item]="message">
-  </app-message>
+<div class="flex-grow-1 overflow-auto d-flex flex-column-reverse p-5" #listContainer>
+  <app-message *ngFor="let message of entities$ | async" [item]="message"></app-message>
 </div>

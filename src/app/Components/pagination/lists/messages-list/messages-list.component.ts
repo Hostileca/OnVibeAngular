@@ -1,4 +1,4 @@
-import {AfterViewChecked, Component, ElementRef, Input, ViewChild} from '@angular/core';
+import {AfterViewChecked, AfterViewInit, Component, ElementRef, Input, NgZone, ViewChild} from '@angular/core';
 import {PaginationBaseComponent} from '../pagination-base/pagination-base.component';
 import {Message} from '../../../../Data/Models/Message/message';
 import {AsyncPipe, NgForOf} from '@angular/common';
@@ -17,7 +17,7 @@ import {Chat} from '../../../../Data/Models/Chat/chat';
   templateUrl: './messages-list.component.html',
   styleUrl: './messages-list.component.css'
 })
-export class MessagesListComponent extends PaginationBaseComponent<Message> implements AfterViewChecked {
+export class MessagesListComponent extends PaginationBaseComponent<Message> {
   @Input() chat!: Chat;
 
   constructor(private readonly _eventBusService: EventBusService) {
@@ -25,25 +25,20 @@ export class MessagesListComponent extends PaginationBaseComponent<Message> impl
     this.startListening()
   }
 
-  ngAfterViewChecked(): void {
-     this.scrollToBottom()
+  override ngAfterViewInit(){
+    this.scrollToBottom();
+    super.ngAfterViewInit();
   }
 
   private startListening(){
     this._eventBusService.On<Message>(Events.MessageSent).subscribe(message => {
       if (this.chat && message.chatId == this.chat.id){
-        this._entities$.value.push(message)
+        this._entities$.next([...this._entities$.value, message]);
       }
     })
   }
 
   private scrollToBottom(): void {
-    console.log(this._entities$.value);
-    console.log('scrollToBottom');
-    try {
-      this.listContainer.nativeElement.scrollTop = this.listContainer.nativeElement.scrollHeight;
-    } catch(err) {
-      console.error(err);
-    }
+    this.listContainer.nativeElement.scrollTop = this.listContainer.nativeElement.scrollHeight;
   }
 }
