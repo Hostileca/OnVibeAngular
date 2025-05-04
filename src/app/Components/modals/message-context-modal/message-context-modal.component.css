@@ -1,0 +1,9 @@
+.modal-content {
+  background-color: #fff;
+}
+.list-group-item {
+  cursor: pointer;
+}
+.list-group-item:hover {
+  background-color: #f8f9fa;
+}

@@ -1,4 +1,5 @@
 import {UserShort} from '../User/user-short';
+import {Reaction} from '../Reaction/reaction';
 
 export interface Message {
   id: string;
@@ -7,4 +8,5 @@ export interface Message {
   attachmentsIds: string[];
   sender: UserShort;
   date: Date;
+  reactions: Reaction[];
 }

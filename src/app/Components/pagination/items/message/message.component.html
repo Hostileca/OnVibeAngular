@@ -7,7 +7,9 @@
   }"
 >
   <div
+    #messageElement
     class="message d-inline-block mb-2 px-3 py-2 rounded shadow-sm"
+    (contextmenu)="onRightClick($event)"
     [class.bg-primary-subtle]="isOutgoing"
     [class.bg-light]="!isOutgoing && !isSystem"
     [class.bg-secondary-subtle]="isSystem"
