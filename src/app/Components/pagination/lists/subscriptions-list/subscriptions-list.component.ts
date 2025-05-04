@@ -17,6 +17,5 @@ import {Subscription} from '../../../../Data/Models/Subscription/subscription';
 export class SubscriptionsListComponent extends PaginationBaseComponent<Subscription>{
     constructor() {
       super();
-      this._loadingContainerId = "subscriptions-list";
     }
 }

@@ -1,4 +1,4 @@
-<div class="card mb-3" [id]="_loadingContainerId">
+<div class="card mb-3" #listContainer>
   <app-user *ngFor="let subscription of entities$ | async"
             [item]="subscription.user">
   </app-user>

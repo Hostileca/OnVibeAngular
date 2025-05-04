@@ -23,7 +23,6 @@ export class ChatsListComponent extends PaginationBaseComponent<Chat> {
 
   constructor(private readonly _eventBusService: EventBusService) {
     super();
-    this._loadingContainerId = 'chats-container';
     this.startListening();
   }
 

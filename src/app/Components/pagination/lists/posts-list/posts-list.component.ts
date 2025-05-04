@@ -17,6 +17,5 @@ import {PostComponent} from '../../items/post/post.component';
 export class PostsListComponent extends PaginationBaseComponent<Post> {
   constructor() {
     super();
-    this._loadingContainerId = 'posts-container'
   }
 }

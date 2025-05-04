@@ -18,6 +18,5 @@ import {UserComponent} from '../../items/user/user.component';
 export class UsersListComponent extends PaginationBaseComponent<User> {
   constructor() {
     super();
-    this._loadingContainerId = 'users-container'
   }
 }

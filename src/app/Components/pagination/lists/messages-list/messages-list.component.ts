@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {AfterViewChecked, Component, ElementRef, Input, ViewChild} from '@angular/core';
 import {PaginationBaseComponent} from '../pagination-base/pagination-base.component';
 import {Message} from '../../../../Data/Models/Message/message';
 import {AsyncPipe, NgForOf} from '@angular/common';
@@ -17,13 +17,16 @@ import {Chat} from '../../../../Data/Models/Chat/chat';
   templateUrl: './messages-list.component.html',
   styleUrl: './messages-list.component.css'
 })
-export class MessagesListComponent extends PaginationBaseComponent<Message> {
+export class MessagesListComponent extends PaginationBaseComponent<Message> implements AfterViewChecked {
   @Input() chat!: Chat;
 
   constructor(private readonly _eventBusService: EventBusService) {
     super();
-    this._loadingContainerId = 'messages-container'
     this.startListening()
+  }
+
+  ngAfterViewChecked(): void {
+     this.scrollToBottom()
   }
 
   private startListening(){
@@ -32,5 +35,15 @@ export class MessagesListComponent extends PaginationBaseComponent<Message> {
         this._entities$.value.push(message)
       }
     })
+  }
+
+  private scrollToBottom(): void {
+    console.log(this._entities$.value);
+    console.log('scrollToBottom');
+    try {
+      this.listContainer.nativeElement.scrollTop = this.listContainer.nativeElement.scrollHeight;
+    } catch(err) {
+      console.error(err);
+    }
   }
 }

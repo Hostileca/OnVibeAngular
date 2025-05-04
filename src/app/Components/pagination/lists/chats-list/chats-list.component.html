@@ -1,4 +1,4 @@
-﻿<div [id]="_loadingContainerId">
+﻿<div #listContainer>
   <app-chat
     *ngFor="let chat of entities$ | async"
     [item]="chat"

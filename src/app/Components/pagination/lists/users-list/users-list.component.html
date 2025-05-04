@@ -1,5 +1,5 @@
 <div>
-  <div class="list-group mb-4" [id]="_loadingContainerId">
+  <div class="list-group mb-4" #listContainer>
     <app-user
       *ngFor="let user of entities$ | async"
       [item]="user">

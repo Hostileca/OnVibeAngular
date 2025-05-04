@@ -1,4 +1,4 @@
-<div class="card mb-3" [id]="_loadingContainerId">
+<div class="card mb-3" #listContainer>
   <app-post *ngFor="let post of entities$ | async"
                [item]="post">
   </app-post>

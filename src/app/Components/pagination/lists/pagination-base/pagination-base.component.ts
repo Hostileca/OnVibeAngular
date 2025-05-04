@@ -4,7 +4,7 @@ import {
   OnChanges,
   OnInit,
   SimpleChanges,
-  Directive
+  Directive, ViewChild, ElementRef
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { PageSettings } from '../../../../Data/Models/Page/page-settings';
@@ -12,6 +12,7 @@ import { PagedResponse } from '../../../../Data/Models/Page/paged-response';
 
 @Directive()
 export abstract class PaginationBaseComponent<TEntity> implements OnInit, OnChanges, AfterViewInit {
+  @ViewChild('listContainer') protected listContainer!: ElementRef;
   protected readonly _entities$ = new BehaviorSubject<TEntity[]>([]);
   public readonly entities$ = this._entities$.asObservable();
 
@@ -19,8 +20,6 @@ export abstract class PaginationBaseComponent<TEntity> implements OnInit, OnChan
   public readonly isEnded$ = new BehaviorSubject<boolean>(false);
 
   public loadingThreshold = 40;
-  protected _loadingContainerId?: string;
-  protected _loadingContainer!: HTMLElement;
 
   private _pageSettings: PageSettings = {
     pageSize: 1,
@@ -41,7 +40,7 @@ export abstract class PaginationBaseComponent<TEntity> implements OnInit, OnChan
 
   protected constructor() {}
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.loadEntities();
   }
 
@@ -56,21 +55,12 @@ export abstract class PaginationBaseComponent<TEntity> implements OnInit, OnChan
   }
 
   ngAfterViewInit(): void {
-    if (!this._loadingContainerId) {
-      console.warn('No loading container ID provided.');
+    if (!this.listContainer) {
+      console.warn('No loading container provided.');
       return;
     }
 
-    const container = document.getElementById(this._loadingContainerId);
-
-    if (!container) {
-      console.warn(`Container with ID "${this._loadingContainerId}" not found.`);
-      return;
-    }
-
-    this._loadingContainer = container;
-
-    container.addEventListener('scroll', async () => {
+    this.listContainer.nativeElement.addEventListener('scroll', async () => {
       if (this.checkLoadingNecessary()) {
         await this.loadEntities();
       }
@@ -104,9 +94,9 @@ export abstract class PaginationBaseComponent<TEntity> implements OnInit, OnChan
   }
 
   private checkLoadingNecessary(): boolean {
-    const containerHeight = this._loadingContainer.scrollHeight;
-    const scrollPosition = Math.abs(this._loadingContainer.scrollTop);
-    const visibleHeight = this._loadingContainer.clientHeight;
+    const containerHeight = this.listContainer.nativeElement.scrollHeight;
+    const scrollPosition = Math.abs(this.listContainer.nativeElement.scrollTop);
+    const visibleHeight = this.listContainer.nativeElement.clientHeight;
 
     return scrollPosition + visibleHeight + this.loadingThreshold >= containerHeight;
   }

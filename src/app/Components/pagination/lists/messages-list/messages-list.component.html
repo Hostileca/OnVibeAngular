@@ -1,4 +1,5 @@
-<div class="messages-container" [id]="_loadingContainerId">
+<div class="messages-container d-flex flex-column-reverse"
+     #listContainer>
   <app-message *ngFor="let message of entities$ | async"
                [item]="message">
   </app-message>

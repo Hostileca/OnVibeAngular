@@ -24,7 +24,7 @@
   </form>
 
   <ng-container *ngIf="entities$ | async as comments">
-    <div class="list-group" [id]="_loadingContainerId">
+    <div class="list-group" #listContainer>
       <app-comment *ngFor="let comment of comments" [item]="comment"></app-comment>
     </div>
 

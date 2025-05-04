@@ -33,7 +33,6 @@ export class CommentsListComponent extends PaginationBaseComponent<Comment> {
 
   constructor(private readonly _commentService: CommentService) {
     super();
-    this._loadingContainerId = 'comments-container'
   }
 
   public toggleCommentForm(){
