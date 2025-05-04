@@ -1,20 +1,36 @@
-<div class="message"
-     *ngIf="item"
-     [class.outgoing]="isOutgoing"
-     [class.system]="isSystem">
+<div
+  class="d-flex"
+  [ngClass]="{
+    'justify-content-end': isOutgoing,
+    'justify-content-start': !isOutgoing && !isSystem,
+    'justify-content-center': isSystem
+  }"
+>
+  <div
+    class="message d-inline-block mb-2 px-3 py-2 rounded shadow-sm"
+    [class.bg-primary-subtle]="isOutgoing"
+    [class.bg-light]="!isOutgoing && !isSystem"
+    [class.bg-secondary-subtle]="isSystem"
+    [class.text-muted]="isSystem"
+    style="max-width: 75%; word-break: break-word;"
+  >
+    <div class="message-sender d-flex align-items-center mb-1" *ngIf="!isOutgoing && !isSystem">
+      <img
+        [src]="senderAvatarUrl || Assets.userDefaultAvatar"
+        [alt]="item.sender.username + ' avatar'"
+        class="sender-avatar rounded-circle me-2"
+        width="32"
+        height="32"
+      >
+      <span class="sender-name fw-semibold">{{ item.sender.username }}</span>
+    </div>
 
-  <div class="message-sender" *ngIf="!isOutgoing && !isSystem">
-    <img [src]="senderAvatarUrl || Assets.userDefaultAvatar"
-         [alt]="item.sender.username + ' avatar'"
-         class="sender-avatar">
-    <span class="sender-name">{{item.sender.username}}</span>
-  </div>
-
-  <div class="message-content">
-    <p>{{item.text}}</p>
-    <span class="message-time" *ngIf="!isSystem">
-      {{item.date | date:'HH:mm'}}
-      <i *ngIf="isOutgoing" class="bi bi-check2-all read-receipt"></i>
-    </span>
+    <div class="message-content">
+      <p class="mb-1 m-0">{{ item.text }}</p>
+      <span class="message-time small text-body-secondary" *ngIf="!isSystem">
+        {{ item.date | date: 'HH:mm' }}
+        <i *ngIf="isOutgoing" class="bi bi-check2-all ms-1 text-primary read-receipt"></i>
+      </span>
+    </div>
   </div>
 </div>

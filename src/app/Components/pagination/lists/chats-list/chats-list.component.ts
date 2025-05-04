@@ -33,8 +33,7 @@ export class ChatsListComponent extends PaginationBaseComponent<Chat> {
   private startListening() {
     this._eventBusService.On<Chat>(Events.ChatAdded).subscribe(chat => {
       const current = this._entities$.value;
-      this._entities$.next([chat, ...current]);
-      this.sort();
+      this._entities$.next([...current, chat]);
     });
 
     this._eventBusService.On<Message>(Events.MessageSent).subscribe(_ => {
@@ -47,7 +46,7 @@ export class ChatsListComponent extends PaginationBaseComponent<Chat> {
       const dateA = new Date(a.preview.date);
       const dateB = new Date(b.preview.date);
 
-      return dateA.getTime() - dateB.getTime();
+      return dateB.getTime() - dateA.getTime();
     });
 
     this._entities$.next(sorted);

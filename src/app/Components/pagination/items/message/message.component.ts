@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {DatePipe, NgIf} from "@angular/common";
+import {DatePipe, NgClass, NgIf} from "@angular/common";
 import {Message} from '../../../../Data/Models/Message/message';
 import {ApiConfig} from '../../../../Data/Constants/api';
 import {FileService} from '../../../../Data/Services/file.service';
@@ -11,7 +11,8 @@ import {ItemBaseComponent} from '../item-base/item-base.component';
   selector: 'app-message',
   imports: [
     NgIf,
-    DatePipe
+    DatePipe,
+    NgClass
   ],
   templateUrl: './message.component.html',
   styleUrl: './message.component.css'

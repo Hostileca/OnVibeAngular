@@ -1,4 +1,4 @@
-import {AfterViewChecked, AfterViewInit, Component, ElementRef, Input, NgZone, ViewChild} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {PaginationBaseComponent} from '../pagination-base/pagination-base.component';
 import {Message} from '../../../../Data/Models/Message/message';
 import {AsyncPipe, NgForOf} from '@angular/common';
