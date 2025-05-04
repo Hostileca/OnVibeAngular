@@ -1,5 +1,5 @@
 <div class="card mb-3" [id]="_loadingContainerId">
-  <app-user *ngFor="let subscription of entities"
+  <app-user *ngFor="let subscription of entities$ | async"
             [item]="subscription.user">
   </app-user>
 </div>

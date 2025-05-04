@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, RouterLink} from '@angular/router';
 import {User} from '../../../Data/Models/User/user';
 import {UserService} from '../../../Data/Services/user.service';
-import {DatePipe, NgIf} from '@angular/common';
+import {AsyncPipe, DatePipe, NgIf} from '@angular/common';
 import {ApiConfig} from '../../../Data/Constants/api';
 import {FileService} from '../../../Data/Services/file.service';
 import {AgePipe} from '../../../Data/Pipes/age.pipe';
@@ -18,6 +18,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {CreatePostModalComponent} from '../../modals/create-post-modal/create-post-modal.component';
 import {SubscriptionService} from '../../../Data/Services/subscription.service';
 import {SubscriptionsInfoComponent} from '../../modals/subscriptions-info-modal/subscriptions-info.component';
+import {of} from 'rxjs';
 
 @Component({
   selector: 'app-user-profile',
@@ -26,7 +27,8 @@ import {SubscriptionsInfoComponent} from '../../modals/subscriptions-info-modal/
     DatePipe,
     AgePipe,
     PostsListComponent,
-    RouterLink
+    RouterLink,
+    AsyncPipe
   ],
   templateUrl: './user-profile.component.html',
   styleUrl: './user-profile.component.css'
@@ -38,11 +40,8 @@ export class UserProfileComponent implements OnInit {
   public avatarUrl: string | null = null;
   public postsSource!: (pageSettings: PageSettings) => Promise<PagedResponse<Post>>
 
-  public get loadedPosts(){
-    if(this.postsListComponent){
-      return this.postsListComponent.entities;
-    }
-    return [];
+  public get loadedPosts() {
+    return this.postsListComponent?.entities$ ?? of([]);
   }
 
   protected get isCurrentUser(){

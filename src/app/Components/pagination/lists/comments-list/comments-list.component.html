@@ -23,12 +23,14 @@
     </div>
   </form>
 
-  <div class="list-group" [id]="_loadingContainerId">
-    <app-comment *ngFor="let comment of entities" [item]="comment"></app-comment>
-  </div>
+  <ng-container *ngIf="entities$ | async as comments">
+    <div class="list-group" [id]="_loadingContainerId">
+      <app-comment *ngFor="let comment of comments" [item]="comment"></app-comment>
+    </div>
 
-  <div *ngIf="entities.length === 0" class="text-center py-4 text-muted">
-    <i class="bi bi-chat-left-text" style="font-size: 2rem;"></i>
-    <p class="mt-2 mb-0">No comments yet</p>
-  </div>
+    <div *ngIf="comments.length === 0" class="text-center py-4 text-muted">
+      <i class="bi bi-chat-left-text" style="font-size: 2rem;"></i>
+      <p class="mt-2 mb-0">No comments yet</p>
+    </div>
+  </ng-container>
 </div>

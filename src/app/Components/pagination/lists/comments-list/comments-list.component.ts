@@ -2,7 +2,7 @@ import {Component, Input} from '@angular/core';
 import {PaginationBaseComponent} from '../pagination-base/pagination-base.component';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Assets} from '../../../../Data/Constants/assets';
-import {NgForOf, NgIf} from '@angular/common';
+import {AsyncPipe, NgForOf, NgIf} from '@angular/common';
 import {Comment} from '../../../../Data/Models/Comment/comment';
 import {CommentComponent} from '../../items/comment/comment.component';
 import {CommentService} from '../../../../Data/Services/comment.service';
@@ -15,7 +15,8 @@ import {AddComment} from '../../../../Data/Models/Comment/add-comment';
     NgIf,
     NgForOf,
     CommentComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AsyncPipe
   ],
   templateUrl: './comments-list.component.html',
   styleUrl: './comments-list.component.css'
@@ -39,9 +40,22 @@ export class CommentsListComponent extends PaginationBaseComponent<Comment> {
     this.showCommentForm = !this.showCommentForm;
   }
 
-  public async addComment(){
-    this.commentForm.patchValue({postId: this.post.id});
-    await this._commentService.addComment(<AddComment>this.commentForm.value);
+  public async addComment() {
+    if (this.commentForm.invalid || !this.post) return;
+
+    this.commentForm.patchValue({ postId: this.post.id });
+
+    try {
+      const newComment = await this._commentService.addComment(<AddComment>this.commentForm.value);
+
+      const current = this._entities$.value;
+      this._entities$.next([newComment, ...current]);
+
+      this.commentForm.reset();
+      this.showCommentForm = false;
+    } catch (error) {
+      console.error('Failed to add comment:', error);
+    }
   }
 
   protected readonly Assets = Assets;

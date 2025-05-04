@@ -1,5 +1,5 @@
 <div class="messages-container" [id]="_loadingContainerId">
-  <app-message *ngFor="let message of entities"
+  <app-message *ngFor="let message of entities$ | async"
                [item]="message">
   </app-message>
 </div>

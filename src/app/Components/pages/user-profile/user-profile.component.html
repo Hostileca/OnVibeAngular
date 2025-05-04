@@ -67,7 +67,7 @@
 
     <app-posts-list [pageSize]="PaginationConfig.PostsLoadingSize" [entitySource]="postsSource"></app-posts-list>
 
-    <div *ngIf="loadedPosts.length === 0" class="text-center py-5">
+    <div *ngIf="(loadedPosts | async)?.length === 0" class="text-center py-5">
       <i class="bi bi-file-earmark-text" style="font-size: 3rem; opacity: 0.3;"></i>
       <h5 class="mt-3">No posts yet</h5>
       <p class="text-muted">

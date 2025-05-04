@@ -1,9 +1,11 @@
 ﻿<div [id]="_loadingContainerId">
-  <app-chat *ngFor="let chat of entities"
-                 [item]="chat"
-                 (onSelect)="selectChat(chat)">
+  <app-chat
+    *ngFor="let chat of entities$ | async"
+    [item]="chat"
+    (onSelect)="selectChat(chat)">
   </app-chat>
 </div>
 
-<div *ngIf="isLoading()" class="status">Loading more chats...</div>
-<div *ngIf="isEnded()" class="status">No more chats</div>
+
+<div *ngIf="isLoading$ | async" class="status">Loading...</div>
+<div *ngIf="isEnded$ | async" class="status">No more chats</div>

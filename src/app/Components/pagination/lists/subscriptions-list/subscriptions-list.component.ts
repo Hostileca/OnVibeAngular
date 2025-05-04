@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {NgForOf} from "@angular/common";
+import {AsyncPipe, NgForOf} from "@angular/common";
 import {UserComponent} from '../../items/user/user.component';
 import {PaginationBaseComponent} from '../pagination-base/pagination-base.component';
 import {Subscription} from '../../../../Data/Models/Subscription/subscription';
@@ -8,7 +8,8 @@ import {Subscription} from '../../../../Data/Models/Subscription/subscription';
   selector: 'app-subscriptions-list',
   imports: [
     NgForOf,
-    UserComponent
+    UserComponent,
+    AsyncPipe
   ],
   templateUrl: './subscriptions-list.component.html',
   styleUrl: './subscriptions-list.component.css'

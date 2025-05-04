@@ -1,7 +1,7 @@
 ﻿import {ChangeDetectorRef, Component, EventEmitter, Output} from '@angular/core';
 import { PaginationBaseComponent } from '../pagination-base/pagination-base.component';
 import {Chat} from '../../../../Data/Models/Chat/chat';
-import {NgForOf, NgIf} from '@angular/common';
+import {AsyncPipe, NgForOf, NgIf} from '@angular/common';
 import {ChatComponent} from '../../items/chat/chat.component';
 import {Message} from '../../../../Data/Models/Message/message';
 import {Events} from '../../../../Data/Hubs/events';
@@ -12,44 +12,46 @@ import {EventBusService} from '../../../../Data/Services/event-bus.service';
   imports: [
     NgForOf,
     ChatComponent,
-    NgIf
+    NgIf,
+    AsyncPipe
   ],
   templateUrl: './chats-list.component.html',
   styleUrl: './chats-list.component.css'
 })
-export class ChatsListComponent extends PaginationBaseComponent<Chat>{
+export class ChatsListComponent extends PaginationBaseComponent<Chat> {
   @Output() onSelectChat = new EventEmitter<Chat>();
 
   constructor(private readonly _eventBusService: EventBusService) {
     super();
-    this._loadingContainerId = 'chats-container'
-    this.startListening()
+    this._loadingContainerId = 'chats-container';
+    this.startListening();
   }
 
   public selectChat(chat: Chat) {
-    this.onSelectChat.emit(chat)
+    this.onSelectChat.emit(chat);
   }
 
-  protected override onLoadEntities(entities: Chat[]){
+  protected override onLoadEntities(entities: Chat[]) {
     super.onLoadEntities(entities);
     this.sort();
   }
 
-  private startListening(){
+  private startListening() {
     this._eventBusService.On<Chat>(Events.ChatAdded).subscribe(chat => {
-      this.entities.push(chat)
+      const current = this._entities$.value;
+      this._entities$.next([chat, ...current]);
       this.sort();
-    })
+    });
+
     this._eventBusService.On<Message>(Events.MessageSent).subscribe(_ => {
       this.sort();
-    })
+    });
   }
 
   private sort() {
-    const sorted = [...this.entities].sort((a, b) =>
+    const sorted = [...this._entities$.value].sort((a, b) =>
       new Date(b.preview.date).getTime() - new Date(a.preview.date).getTime()
     );
-
-    this.entities = sorted;
+    this._entities$.next(sorted);
   }
 }

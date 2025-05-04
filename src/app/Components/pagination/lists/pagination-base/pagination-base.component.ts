@@ -1,57 +1,70 @@
-import {AfterViewInit, Component, Input, OnChanges, OnInit} from '@angular/core';
-import {PageSettings} from '../../../../Data/Models/Page/page-settings';
-import {PagedResponse} from '../../../../Data/Models/Page/paged-response';
+import {
+  AfterViewInit,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+  Directive
+} from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { PageSettings } from '../../../../Data/Models/Page/page-settings';
+import { PagedResponse } from '../../../../Data/Models/Page/paged-response';
 
-@Component({template: ``})
-export abstract class PaginationBaseComponent<TEntity> implements OnInit, OnChanges, AfterViewInit  {
-  public entities: TEntity[] = []
+@Directive()
+export abstract class PaginationBaseComponent<TEntity> implements OnInit, OnChanges, AfterViewInit {
+  protected readonly _entities$ = new BehaviorSubject<TEntity[]>([]);
+  public readonly entities$ = this._entities$.asObservable();
+
+  public readonly isLoading$ = new BehaviorSubject<boolean>(false);
+  public readonly isEnded$ = new BehaviorSubject<boolean>(false);
+
   public loadingThreshold = 40;
-  protected _loadingContainerId?: string
+  protected _loadingContainerId?: string;
   protected _loadingContainer!: HTMLElement;
 
   private _pageSettings: PageSettings = {
     pageSize: 1,
-    pageNumber: 1
+    pageNumber: 1,
   };
 
-  @Input({required: true}) set pageSize(pageSize: number) {
-    this._pageSettings.pageSize = pageSize
+  @Input({ required: true }) set pageSize(pageSize: number) {
+    this._pageSettings.pageSize = pageSize;
   }
 
-  @Input({required: true}) set entitySource(entitySource: (pageSettings: PageSettings) => Promise<PagedResponse<TEntity>>) {
-    this._entitySource = entitySource
+  @Input({ required: true }) set entitySource(
+    entitySource: (page: PageSettings) => Promise<PagedResponse<TEntity>>
+  ) {
+    this._entitySource = entitySource;
   }
 
-  protected _entitySource!: (pageSettings: PageSettings) => Promise<PagedResponse<TEntity>>
-  private _isLoading: boolean = false
-  private _isEnded: boolean = false
+  protected _entitySource!: (page: PageSettings) => Promise<PagedResponse<TEntity>>;
 
-  protected constructor() {
+  protected constructor() {}
+
+  ngOnInit(): void {
+    this.loadEntities();
   }
 
-  ngOnInit() {
-    this.loadEntities()
+  async ngOnChanges(changes: SimpleChanges): Promise<void> {
+    if (changes['entitySource']) {
+      this._pageSettings.pageNumber = 1;
+      this.isLoading$.next(false);
+      this.isEnded$.next(false);
+      this._entities$.next([]);
+      await this.loadEntities();
+    }
   }
 
-  //if user change chat source
-  async ngOnChanges() {
-    this.entities = []
-    this._pageSettings.pageNumber = 1
-    this._isLoading = false
-    this._isEnded = false
-    await this.loadEntities()
-  }
-
-  async ngAfterViewInit() {
+  ngAfterViewInit(): void {
     if (!this._loadingContainerId) {
-      console.warn(`No container id provided`);
+      console.warn('No loading container ID provided.');
       return;
     }
 
     const container = document.getElementById(this._loadingContainerId);
 
     if (!container) {
-      console.warn(`Container not found with id ${this._loadingContainerId}`);
+      console.warn(`Container with ID "${this._loadingContainerId}" not found.`);
       return;
     }
 
@@ -64,44 +77,30 @@ export abstract class PaginationBaseComponent<TEntity> implements OnInit, OnChan
     });
   }
 
-  private async loadEntities() {
-    if (this._isLoading || this._isEnded) {
-      return;
-    }
+  private async loadEntities(): Promise<void> {
+    if (this.isLoading$.value || this.isEnded$.value) return;
 
-    this._isLoading = true;
+    this.isLoading$.next(true);
 
     try {
-      const entities = await this._entitySource(this._pageSettings);
-      this.onLoadEntities(entities.items);
-      this.updateIsEntitiesEnded(entities.items);
+      const response = await this._entitySource(this._pageSettings);
+      this.onLoadEntities(response.items);
+      this.updateIsEntitiesEnded(response.items);
       this._pageSettings.pageNumber += 1;
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error('Failed to load entities:', error);
     } finally {
-      this._isLoading = false;
+      this.isLoading$.next(false);
     }
   }
 
-  protected onLoadEntities(entities: TEntity[]){
-    if (!Array.isArray(entities)) {
-      console.warn('Received non-array entities:', entities);
-      entities = [];
-    }
-
-    this.entities = this.entities.concat(entities);
+  protected onLoadEntities(entities: TEntity[]): void {
+    const current = this._entities$.value;
+    this._entities$.next([...current, ...entities]);
   }
 
-  private updateIsEntitiesEnded(entities: TEntity[]) {
-    this._isEnded = entities.length < this._pageSettings.pageSize
-  }
-
-  public isLoading(): boolean {
-    return this._isLoading
-  }
-
-  public isEnded(): boolean {
-    return this._isEnded
+  private updateIsEntitiesEnded(entities: TEntity[]): void {
+    this.isEnded$.next(entities.length < this._pageSettings.pageSize);
   }
 
   private checkLoadingNecessary(): boolean {
