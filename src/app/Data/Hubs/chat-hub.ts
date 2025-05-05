@@ -7,6 +7,7 @@ import {EventBusService} from '../Services/event-bus.service';
 import {Injectable} from '@angular/core';
 import {ApiConfig} from '../Constants/api';
 import {Chat} from '../Models/Chat/chat';
+import {Reaction} from '../Models/Reaction/reaction';
 
 @Injectable({
   providedIn: 'root'
@@ -53,6 +54,12 @@ export class ChatHub {
     })
     this._hubConnection.on(Events.ChatAdded, (chat: Chat) => {
       this._eventBusService.Emit(Events.ChatAdded, chat)
+    })
+    this._hubConnection.on(Events.ReactionSent, (reaction: Reaction) => {
+      this._eventBusService.Emit(Events.ReactionSent, reaction)
+    })
+    this._hubConnection.on(Events.ReactionRemoved, (reaction: Reaction) => {
+      this._eventBusService.Emit(Events.ReactionRemoved, reaction)
     })
   }
 }

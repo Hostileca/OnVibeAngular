@@ -1,13 +1,16 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {DatePipe, NgClass, NgIf} from "@angular/common";
+import {DatePipe, NgClass, NgForOf, NgIf} from "@angular/common";
 import {Message} from '../../../../Data/Models/Message/message';
 import {ApiConfig} from '../../../../Data/Constants/api';
 import {FileService} from '../../../../Data/Services/file.service';
 import {AuthService} from '../../../../Data/Services/auth.service';
 import {Assets} from '../../../../Data/Constants/assets';
 import {ItemBaseComponent} from '../item-base/item-base.component';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {MessageContextMenuComponent} from '../../../context-menu/message-context-menu/message-context-menu.component';
+import {ReactionService} from '../../../../Data/Services/reaction.service';
+import {Reaction} from '../../../../Data/Models/Reaction/reaction';
+import {Events} from '../../../../Data/Hubs/events';
+import {EventBusService} from '../../../../Data/Services/event-bus.service';
 
 @Component({
   selector: 'app-message',
@@ -15,7 +18,8 @@ import {MessageContextMenuComponent} from '../../../context-menu/message-context
     NgIf,
     DatePipe,
     NgClass,
-    MessageContextMenuComponent
+    MessageContextMenuComponent,
+    NgForOf
   ],
   templateUrl: './message.component.html',
   styleUrl: './message.component.css'
@@ -23,9 +27,12 @@ import {MessageContextMenuComponent} from '../../../context-menu/message-context
 export class MessageComponent extends ItemBaseComponent<Message> implements OnInit {
   @ViewChild(MessageContextMenuComponent) ContextMenu!: MessageContextMenuComponent;
   public senderAvatarUrl: string | null = null;
+  public groupedReactions: { [emoji: string]: number } = {};
 
   constructor(private readonly _fileService: FileService,
-              private readonly _authService: AuthService) {
+              private readonly _reactionService: ReactionService,
+              private readonly _authService: AuthService,
+              private readonly _eventBusService: EventBusService) {
     super();
   }
 
@@ -33,6 +40,8 @@ export class MessageComponent extends ItemBaseComponent<Message> implements OnIn
     if(!this.isSystem && !this.isOutgoing){
       this.loadSenderAvatar()
     }
+    this.startListening()
+    this.groupReactions();
   }
 
   protected get isOutgoing(): boolean {
@@ -53,10 +62,58 @@ export class MessageComponent extends ItemBaseComponent<Message> implements OnIn
     }
   }
 
+  protected async react(emoji: string) {
+    const existingReaction = this.item.reactions.find(r => r.emoji === emoji);
+    if(existingReaction){
+      await this._reactionService.upsertReaction({messageId: this.item.id, emoji: emoji});
+    }
+    await this._reactionService.upsertReaction({messageId: this.item.id});
+  }
+
   private async loadSenderAvatar(){
     const url = `${ApiConfig.BaseUrl}/users/${this.item.sender.id}/image`;
     this.senderAvatarUrl = await this._fileService.loadImageAsDataUrl(url)
   }
 
+  private groupReactions() {
+    this.groupedReactions = this.item.reactions.reduce((acc, reaction) => {
+      if (acc[reaction.emoji]) {
+        acc[reaction.emoji]++;
+      } else {
+        acc[reaction.emoji] = 1;
+      }
+      return acc;
+    }, {} as { [emoji: string]: number });
+  }
+
+  private startListening() {
+    this._eventBusService.On<Reaction>(Events.ReactionSent).subscribe(reaction => {
+      if (this.item && reaction.messageId === this.item.id) {
+        const existingReaction = this.item.reactions.find(r => r.emoji === reaction.emoji && r.senderId === reaction.senderId);
+
+        if (!existingReaction) {
+          this.item.reactions.push(reaction);
+          this.groupedReactions[reaction.emoji] = (this.groupedReactions[reaction.emoji] || 0) + 1;
+        }
+      }
+    });
+
+    this._eventBusService.On<Reaction>(Events.ReactionRemoved).subscribe(reaction => {
+      if (this.item && reaction.messageId === this.item.id) {
+        const existingIndex = this.item.reactions.findIndex(r => r.emoji === reaction.emoji && r.senderId === reaction.senderId);
+
+        if (existingIndex !== -1) {
+          this.item.reactions.splice(existingIndex, 1);
+          this.groupedReactions[reaction.emoji]--;
+
+          if (this.groupedReactions[reaction.emoji] === 0) {
+            delete this.groupedReactions[reaction.emoji];
+          }
+        }
+      }
+    });
+  }
+
   protected readonly Assets = Assets;
+  protected readonly Object = Object;
 }

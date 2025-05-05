@@ -1,4 +1,6 @@
 export const Events = {
   MessageSent: "MessageSent",
-  ChatAdded: "ChatAdded"
+  ChatAdded: "ChatAdded",
+  ReactionSent: "ReactionSent",
+  ReactionRemoved: "ReactionRemoved"
 }

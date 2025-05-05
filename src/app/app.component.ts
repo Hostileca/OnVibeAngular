@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
-import {RouterModule, RouterOutlet} from '@angular/router';
+import {RouterOutlet} from '@angular/router';
 import {HeaderComponent} from './Components/special/header/header.component';
-import {routes} from './app.routes';
 import {ChatHub} from './Data/Hubs/chat-hub';
 
 @Component({
