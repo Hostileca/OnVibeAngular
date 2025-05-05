@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import {Directive} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 
-@Component({template: ``})
+@Directive()
 export abstract class ModalBaseComponent {
   protected constructor(private readonly _activeModal: NgbActiveModal) {}
 
