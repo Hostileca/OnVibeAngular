@@ -37,9 +37,11 @@
     <div class="message-reactions d-flex mt-1">
       <span
         *ngFor="let emoji of Object.keys(groupedReactions)"
-        class="reaction-icon me-1"
+        class="reaction-icon me-1 pointer-event"
         (click)="react(emoji)"
-        style="cursor: pointer;"
+        [ngClass]="{
+          'border border-primary rounded-circle': isMyReaction(emoji), 'p-1': isMyReaction(emoji)
+        }"
       >
         {{ emoji }} <span *ngIf="groupedReactions[emoji] > 1">({{ groupedReactions[emoji] }})</span>
       </span>

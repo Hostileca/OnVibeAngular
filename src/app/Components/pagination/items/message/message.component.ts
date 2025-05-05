@@ -70,6 +70,10 @@ export class MessageComponent extends ItemBaseComponent<Message> implements OnIn
     await this._reactionService.upsertReaction({messageId: this.item.id});
   }
 
+  protected isMyReaction(emoji: string) : boolean {
+    return this.item.reactions.some(r => r.emoji === emoji && r.senderId === this._authService.userInfo?.id);
+  }
+
   private async loadSenderAvatar(){
     const url = `${ApiConfig.BaseUrl}/users/${this.item.sender.id}/image`;
     this.senderAvatarUrl = await this._fileService.loadImageAsDataUrl(url)
