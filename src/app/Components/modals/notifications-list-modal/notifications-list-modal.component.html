@@ -1,0 +1,33 @@
+<div class="modal-header">
+  <h5 class="modal-title">Notifications</h5>
+  <button type="button" class="btn-close" aria-label="Close" (click)="close()"></button>
+</div>
+
+<div class="modal-body p-0">
+  <ul class="list-group list-group-flush">
+    <li
+      *ngFor="let notification of notifications"
+      class="list-group-item d-flex justify-content-between align-items-start"
+      [class.bg-light]="!notification.isRead"
+    >
+      <div class="ms-2 me-auto">
+        <div class="fw-bold">
+          <ng-container *ngIf="notification.type == NotificationType.message">
+            New Message
+          </ng-container>
+        </div>
+        <small class="text-muted">{{ notification.date | date: 'short' }}</small>
+      </div>
+      <span
+        class="badge bg-primary d-flex align-items-center justify-content-center"
+        style="width: 46px; height: 46px;"
+      >
+        <i class="bi bi-chat-dots"></i>
+      </span>
+    </li>
+  </ul>
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-secondary" (click)="close()">Close</button>
+</div>

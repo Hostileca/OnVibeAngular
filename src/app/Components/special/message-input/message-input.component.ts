@@ -28,6 +28,8 @@ export class MessageInputComponent{
   });
 
   public async onSubmit() {
-    await this._messageService.sendMessage(this.form.value)
+    const chatId = this.form.get('chatId')?.value;
+    await this._messageService.sendMessage(this.form.value);
+    this.form.reset({ chatId })
   }
 }

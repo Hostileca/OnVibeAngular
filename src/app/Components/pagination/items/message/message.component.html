@@ -28,7 +28,7 @@
 
     <div class="message-content">
       <p class="mb-1 m-0">{{ item.text }}</p>
-      <span class="message-time small text-body-secondary" *ngIf="!isSystem">
+      <span class="message-time small text-body-secondary">
         {{ item.date | date: 'HH:mm' }}
         <i *ngIf="isOutgoing" class="bi bi-check2-all ms-1 text-primary read-receipt"></i>
       </span>

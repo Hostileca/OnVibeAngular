@@ -13,19 +13,30 @@
         </ul>
       </nav>
     </div>
-    <div class="dropdown">
-      <button class="btn btn-outline-secondary dropdown-toggle d-flex align-items-center"
-              type="button"
-              id="profileDropdown"
-              data-bs-toggle="dropdown"
-              aria-expanded="false">
-        <i class="bi bi-person-circle me-2"></i>
+
+    <div class="d-flex align-items-center gap-2">
+      <button
+        class="btn btn-outline-primary position-relative"
+        (click)="openNotifications()"
+        title="Notifications"
+      >
+        <i class="bi bi-bell"></i>
       </button>
-      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-        <li><a class="dropdown-item" [routerLink]="['/users', this.user.id]">My Profile</a></li>
-        <li><hr class="dropdown-divider"></li>
-        <li><a class="dropdown-item text-danger">Logout</a></li>
-      </ul>
+
+      <div class="dropdown">
+        <button class="btn btn-outline-secondary dropdown-toggle d-flex align-items-center"
+                type="button"
+                id="profileDropdown"
+                data-bs-toggle="dropdown"
+                aria-expanded="false">
+          <i class="bi bi-person-circle me-2"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+          <li><a class="dropdown-item" [routerLink]="['/users', this.user.id]">My Profile</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item text-danger">Logout</a></li>
+        </ul>
+      </div>
     </div>
   </div>
 </header>
