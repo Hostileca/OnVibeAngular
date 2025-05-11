@@ -16,6 +16,8 @@ import {PagedResponse} from '../../../../Data/Models/Page/paged-response';
 import {Comment} from '../../../../Data/Models/Comment/comment';
 import {PageSettings} from '../../../../Data/Models/Page/page-settings';
 import {CommentService} from '../../../../Data/Services/comment.service';
+import {FileHelper} from '../../../../Helpers/file-helper';
+import {AttachmentType} from '../../../../Data/Models/Attachment/attachment-type';
 
 @Component({
   selector: 'app-post',
@@ -40,11 +42,11 @@ export class PostComponent extends ItemBaseComponent<Post> implements OnInit {
   public showComment: boolean = false;
 
   protected get imageAttachments() {
-    return this.loadedAttachments.filter(attachment => this.isImage(attachment)) || [];
+    return this.loadedAttachments.filter(attachment => FileHelper.isImage(attachment)) || [];
   }
 
   protected get otherAttachments() {
-    return this.loadedAttachments.filter(attachment => !this.isImage(attachment)) || [];
+    return this.loadedAttachments.filter(attachment => !FileHelper.isImage(attachment)) || [];
   }
 
   constructor(private readonly _fileService: FileService,
@@ -66,19 +68,8 @@ export class PostComponent extends ItemBaseComponent<Post> implements OnInit {
 
   private async loadAttachments() {
     this.loadedAttachments = await Promise.all(
-      this.item.attachmentsIds.map(id => this._fileService.getAttachmentBlobById(id))
+      this.item.attachmentsIds.map(id => this._fileService.getAttachmentBlobById(id, AttachmentType.post))
     );
-  }
-
-  protected isImage(attachment: LoadedAttachment){
-    return attachment.blob.type.startsWith('image/');
-  }
-
-  protected getFileIcon(file: any): string {
-    if (file.type?.includes('pdf')) return 'bi-file-earmark-pdf';
-    if (file.type?.includes('word')) return 'bi-file-earmark-word';
-    if (file.type?.includes('video')) return 'bi-file-earmark-play';
-    return 'bi-file-earmark';
   }
 
   protected async toggleLike(){
@@ -93,4 +84,5 @@ export class PostComponent extends ItemBaseComponent<Post> implements OnInit {
 
   protected readonly Assets = Assets;
   protected readonly PaginationConfig = PaginationConfig;
+  protected readonly FileHelper = FileHelper;
 }

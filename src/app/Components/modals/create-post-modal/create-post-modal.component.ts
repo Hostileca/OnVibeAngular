@@ -41,7 +41,7 @@ export class CreatePostModalComponent extends ModalBaseComponent {
       (this.postForm.get('content') && this.postForm.get('content')?.value!.length! > 0);
   }
 
-  onFileSelected(event: Event) {
+  public onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files) {
       const currentFiles = this.postForm.get('attachments')?.value || [];

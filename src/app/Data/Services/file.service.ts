@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import {lastValueFrom} from 'rxjs';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
 import {ApiConfig} from '../Constants/api';
+import {AttachmentType} from '../Models/Attachment/attachment-type';
+import {HttpHelper} from '../../Helpers/http-helper';
 
 @Injectable({
   providedIn: 'root'
@@ -33,12 +35,14 @@ export class FileService {
     }
   }
 
-
-  public async getAttachmentBlobById(id: string): Promise<{ blob: Blob, fileName: string }> {
+  public async getAttachmentBlobById(id: string, type: AttachmentType): Promise<{ blob: Blob, fileName: string }> {
+    let params = new HttpParams();
+    params = params.append('type', type);
     const response = await lastValueFrom(
       this._httpClient.get(`${ApiConfig.BaseUrl}/attachments/${id}`, {
         responseType: 'blob',
-        observe: 'response'
+        observe: 'response',
+        params: params
       })
     );
 

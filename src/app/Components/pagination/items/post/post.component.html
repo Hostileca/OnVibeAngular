@@ -22,8 +22,7 @@
           *ngIf="imageAttachments.length > 1"
           [interval]="0"
           [showNavigationArrows]="true"
-          [showNavigationIndicators]="true"
-          #carousel>
+          [showNavigationIndicators]="true">
           <ng-template ngbSlide *ngFor="let img of imageAttachments">
             <div class="carousel-image-container">
               <img
@@ -50,7 +49,7 @@
          [href]="file.blob | blobUrl"
          target="_blank"
          class="list-group-item list-group-item-action d-flex align-items-center">
-        <i class="bi me-2" [ngClass]="getFileIcon(file)"></i>
+        <i class="bi me-2" [ngClass]="FileHelper.getFileIcon(file)"></i>
         <span class="flex-grow-1">{{ file.fileName }}</span>
         <small class="text-muted">{{ file.blob.size | fileSize }}</small>
       </a>

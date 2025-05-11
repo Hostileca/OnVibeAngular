@@ -23,8 +23,16 @@ export class MessageService {
 
   public async sendMessage(message: SendMessage): Promise<Message> {
     let formData = new FormData();
-    formData.append('text', message.text);
+    if (message.text){
+      formData.append('text', message.text);
+    }
     formData.append('chatId', message.chatId);
+    if(message.attachments){
+      for (const attachment of message.attachments){
+        formData.append('attachments', attachment);
+      }
+    }
+
     return await lastValueFrom(this._httpClient.post<Message>(`${ApiConfig.BaseUrl}/messages`, formData));
   }
 }

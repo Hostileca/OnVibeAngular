@@ -11,6 +11,12 @@ import {ReactionService} from '../../../../Data/Services/reaction.service';
 import {Reaction} from '../../../../Data/Models/Reaction/reaction';
 import {Events} from '../../../../Data/Hubs/events';
 import {EventBusService} from '../../../../Data/Services/event-bus.service';
+import {LoadedAttachment} from '../../../../Data/Models/Attachment/loaded-attachment';
+import {FileHelper} from '../../../../Helpers/file-helper';
+import {BlobUrlPipe} from '../../../../Data/Pipes/blob-url.pipe';
+import {FileSizePipe} from '../../../../Data/Pipes/file-size.pipe';
+import {NgbCarousel, NgbCarouselModule, NgbSlide} from '@ng-bootstrap/ng-bootstrap';
+import {AttachmentType} from '../../../../Data/Models/Attachment/attachment-type';
 
 @Component({
   selector: 'app-message',
@@ -19,7 +25,12 @@ import {EventBusService} from '../../../../Data/Services/event-bus.service';
     DatePipe,
     NgClass,
     MessageContextMenuComponent,
-    NgForOf
+    NgForOf,
+    BlobUrlPipe,
+    FileSizePipe,
+    NgbCarousel,
+    NgbCarouselModule,
+    NgbSlide
   ],
   templateUrl: './message.component.html',
   styleUrl: './message.component.css'
@@ -28,6 +39,7 @@ export class MessageComponent extends ItemBaseComponent<Message> implements OnIn
   @ViewChild(MessageContextMenuComponent) ContextMenu!: MessageContextMenuComponent;
   public senderAvatarUrl: string | null = null;
   public groupedReactions: { [emoji: string]: number } = {};
+  public loadedAttachments: LoadedAttachment[] = [];
 
   constructor(private readonly _fileService: FileService,
               private readonly _reactionService: ReactionService,
@@ -40,8 +52,17 @@ export class MessageComponent extends ItemBaseComponent<Message> implements OnIn
     if(!this.isSystem && !this.isOutgoing){
       this.loadSenderAvatar()
     }
-    this.startListening()
+    this.loadAttachments()
+    this.startListening();
     this.groupReactions();
+  }
+
+  protected get imageAttachments() {
+    return this.loadedAttachments.filter(attachment => FileHelper.isImage(attachment)) || [];
+  }
+
+  protected get otherAttachments() {
+    return this.loadedAttachments.filter(attachment => !FileHelper.isImage(attachment)) || [];
   }
 
   protected get isOutgoing(): boolean {
@@ -118,6 +139,13 @@ export class MessageComponent extends ItemBaseComponent<Message> implements OnIn
     });
   }
 
+  private async loadAttachments() {
+    this.loadedAttachments = await Promise.all(
+      this.item.attachmentsIds.map(id => this._fileService.getAttachmentBlobById(id, AttachmentType.message))
+    );
+  }
+
   protected readonly Assets = Assets;
   protected readonly Object = Object;
+  protected readonly FileHelper = FileHelper;
 }
