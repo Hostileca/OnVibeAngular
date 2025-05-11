@@ -33,7 +33,7 @@ export class MessagesListComponent extends PaginationBaseComponent<Message> {
   private startListening(){
     this._eventBusService.On<Message>(Events.MessageSent).subscribe(message => {
       if (this.chat && message.chatId == this.chat.id){
-        this._entities$.next([...this._entities$.value, message]);
+        this._entities$.next([message, ...this._entities$.value]);
       }
     })
   }
