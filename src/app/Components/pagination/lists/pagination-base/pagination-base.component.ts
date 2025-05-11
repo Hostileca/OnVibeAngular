@@ -67,20 +67,28 @@ export abstract class PaginationBaseComponent<TEntity> implements OnInit, OnChan
     });
   }
 
+  private _loadToken = 0;
   private async loadEntities(): Promise<void> {
     if (this.isLoading$.value || this.isEnded$.value) return;
 
     this.isLoading$.next(true);
+    const currentToken = ++this._loadToken;
 
     try {
       const response = await this._entitySource(this._pageSettings);
+
+      if (currentToken !== this._loadToken) return;
+
       this.onLoadEntities(response.items);
       this.updateIsEntitiesEnded(response.items);
       this._pageSettings.pageNumber += 1;
+
     } catch (error) {
       console.error('Failed to load entities:', error);
     } finally {
-      this.isLoading$.next(false);
+      if (currentToken === this._loadToken) {
+        this.isLoading$.next(false);
+      }
     }
   }
 
