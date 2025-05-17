@@ -34,4 +34,10 @@ export class PostService {
 
     return await lastValueFrom(this._httpClient.post<Post>(`${ApiConfig.BaseUrl}/posts`, formData));
   }
+
+  public async getWall(pageSettings: PageSettings): Promise<PagedResponse<Post>> {
+    let params = new HttpParams();
+    params = HttpHelper.addPageSettingsToQuery(params, pageSettings)
+    return await lastValueFrom(this._httpClient.get<PagedResponse<Post>>(`${ApiConfig.BaseUrl}/posts/wall`, {params}));
+  }
 }

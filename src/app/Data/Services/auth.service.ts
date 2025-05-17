@@ -9,7 +9,6 @@ import {ApiConfig} from '../Constants/api';
 import {catchError, lastValueFrom, Observable, tap, throwError} from 'rxjs';
 import {TokenRefresh} from '../Models/Token/token-refresh';
 import {RegisterRequest} from '../Models/User/register-request';
-import {UserShort} from '../Models/User/user-short';
 import {User} from '../Models/User/user';
 
 @Injectable({
@@ -24,7 +23,8 @@ export class AuthService {
   }
 
   constructor(private readonly _httpClient: HttpClient,
-              private readonly _appCookieService: AppCookieService) {
+              private readonly _appCookieService: AppCookieService,
+              private readonly _router: Router) {
     if(!this.tokens){
       this.loadCookies()
     }
@@ -66,6 +66,7 @@ export class AuthService {
   public logout(){
     this.tokens = null
     this._appCookieService.delete(CookiesName.Tokens)
+    this._router.navigateByUrl("/sign-in")
   }
 
   private saveUserInfo(user: User){

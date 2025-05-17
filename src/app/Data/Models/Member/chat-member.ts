@@ -1,5 +1,8 @@
+import {ChatRole} from './chat-role';
+
 export interface ChatMember {
-  userId: string
-  joinDate: Date
-  chatRoles: number
+  userId: string;
+  chatId: string;
+  joinDate: Date;
+  role: ChatRole;
 }

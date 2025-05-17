@@ -1,10 +1,7 @@
 import { Component } from '@angular/core';
 import {AuthService} from '../../../Data/Services/auth.service';
-import {User} from '../../../Data/Models/User/user';
 import {NgIf} from '@angular/common';
 import {RouterLink, RouterModule} from '@angular/router';
-import {SubscriptionsInfoComponent} from '../../modals/subscriptions-info-modal/subscriptions-info.component';
-import {PageSettings} from '../../../Data/Models/Page/page-settings';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {
   NotificationsListModalComponent
@@ -21,16 +18,26 @@ import {
   styleUrl: './header.component.css'
 })
 export class HeaderComponent {
-  public user!: User;
   constructor(private readonly _authService: AuthService,
-              private readonly _modalService: NgbModal ) {
-    this.user = _authService.userInfo!;
+              private readonly _modalService: NgbModal) {
+  }
+
+  public get isLoggedIn() {
+    return this._authService.isAuth;
+  }
+
+  public get user() {
+    return this._authService.userInfo
   }
 
   public openNotifications() {
-    const modalRef = this._modalService.open(NotificationsListModalComponent, {
+    this._modalService.open(NotificationsListModalComponent, {
       size: 'lg',
       centered: true
     });
+  }
+
+  public logout() {
+    this._authService.logout();
   }
 }
