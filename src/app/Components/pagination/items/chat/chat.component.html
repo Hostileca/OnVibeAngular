@@ -8,6 +8,8 @@
       <h4 class="chat-name">{{item.name}}</h4>
       <span *ngIf="item.preview" class="chat-time">{{item.preview.date | date:'HH:mm'}}</span>
     </div>
-    <p *ngIf="item.preview" class="chat-preview">{{item.preview.text}}</p>
+    <p *ngIf="item.preview" class="chat-preview">
+      {{ item.preview.text?.trim() ? item.preview.text : '[File]' }}
+    </p>
   </div>
 </div>

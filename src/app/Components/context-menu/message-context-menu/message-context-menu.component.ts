@@ -25,6 +25,7 @@ export class MessageContextMenuComponent extends ContextMenuBaseComponent{
     if (this.message) {
       navigator.clipboard.writeText(this.message.text)
     }
+    this.close()
   }
 
   protected async react(emoji: string){

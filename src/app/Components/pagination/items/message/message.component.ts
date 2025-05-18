@@ -79,7 +79,7 @@ export class MessageComponent extends ItemBaseComponent<Message> implements OnIn
   protected onRightClick(event: MouseEvent): void {
     event.preventDefault();
     if(this.ContextMenu){
-      this.ContextMenu.ShowMenu(event.clientX, event.clientY);
+      this.ContextMenu.open(event.clientX, event.clientY);
     }
   }
 
@@ -101,7 +101,6 @@ export class MessageComponent extends ItemBaseComponent<Message> implements OnIn
   }
 
   private groupReactions() {
-    if(!this.item.reactions) return;
     this.groupedReactions = this.item.reactions.reduce((acc, reaction) => {
       if (acc[reaction.emoji]) {
         acc[reaction.emoji]++;
@@ -141,7 +140,6 @@ export class MessageComponent extends ItemBaseComponent<Message> implements OnIn
   }
 
   private async loadAttachments() {
-    if(!this.item.attachmentsIds) return;
     this.loadedAttachments = await Promise.all(
       this.item.attachmentsIds.map(id => this._fileService.getAttachmentBlobById(id, AttachmentType.message))
     );
