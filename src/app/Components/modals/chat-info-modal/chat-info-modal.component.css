@@ -1,0 +1,16 @@
+.object-fit-cover {
+  object-fit: cover;
+}
+
+.btn-primary, .btn-danger {
+  transition: all 0.2s ease;
+}
+
+.list-group-item {
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+
+.list-group-item:hover {
+  background-color: #f8f9fa;
+}

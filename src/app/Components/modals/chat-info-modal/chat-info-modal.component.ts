@@ -15,6 +15,7 @@ import {ApiConfig} from '../../../Data/Constants/api';
 import {FileService} from '../../../Data/Services/file.service';
 import {UserService} from '../../../Data/Services/user.service';
 import {Assets} from '../../../Data/Constants/assets';
+import {ChatRole} from '../../../Data/Models/Member/chat-role';
 
 @Component({
   selector: 'app-chat-info',
@@ -53,6 +54,10 @@ export class ChatInfoModalComponent extends ModalBaseComponent implements OnInit
               activeModal: NgbActiveModal
   ) {
     super(activeModal);
+  }
+
+  get canEditChat(): boolean {
+    return this.chat.members.find(m => m.userId === this._authService.userInfo?.id)?.role !== ChatRole.member;
   }
 
   async ngOnInit() {
