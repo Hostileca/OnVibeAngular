@@ -1,5 +1,4 @@
 import {Component, Input} from '@angular/core';
-import {NgIf} from '@angular/common';
 import {Chat} from '../../../Data/Models/Chat/chat';
 import {PageSettings} from '../../../Data/Models/Page/page-settings';
 import {PagedResponse} from '../../../Data/Models/Page/paged-response';
@@ -11,6 +10,8 @@ import {MessageInputComponent} from '../message-input/message-input.component';
 import {MessagesListComponent} from '../../pagination/lists/messages-list/messages-list.component';
 import {PaginationConfig} from '../../../Data/Constants/pagination-configs';
 import { Assets } from '../../../Data/Constants/assets';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {ChatInfoModalComponent} from '../../modals/chat-info-modal/chat-info-modal.component';
 
 @Component({
   selector: 'app-chat-details',
@@ -33,7 +34,16 @@ export class ChatDetailsComponent {
   public messagesSource!: (pageSettings: PageSettings) => Promise<PagedResponse<Message>>
 
   constructor(private readonly _messageService: MessageService,
-              private readonly _fileService: FileService) {
+              private readonly _fileService: FileService,
+              private readonly _modalService: NgbModal) {
+  }
+
+  protected openInfo(){
+    const modal = this._modalService.open(ChatInfoModalComponent, {
+      size: 'lg',
+      centered: true
+    });
+    modal.componentInstance.chat = this.chat;
   }
 
   private async loadChat(chat: Chat) {

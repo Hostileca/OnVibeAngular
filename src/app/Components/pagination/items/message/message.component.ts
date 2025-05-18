@@ -96,11 +96,12 @@ export class MessageComponent extends ItemBaseComponent<Message> implements OnIn
   }
 
   private async loadSenderAvatar(){
-    const url = `${ApiConfig.BaseUrl}/users/${this.item.sender.id}/image`;
+    const url = `${ApiConfig.BaseUrl}/users/${this.item.sender.id}/avatar`;
     this.senderAvatarUrl = await this._fileService.loadImageAsDataUrl(url)
   }
 
   private groupReactions() {
+    if(!this.item.reactions) return;
     this.groupedReactions = this.item.reactions.reduce((acc, reaction) => {
       if (acc[reaction.emoji]) {
         acc[reaction.emoji]++;
@@ -140,6 +141,7 @@ export class MessageComponent extends ItemBaseComponent<Message> implements OnIn
   }
 
   private async loadAttachments() {
+    if(!this.item.attachmentsIds) return;
     this.loadedAttachments = await Promise.all(
       this.item.attachmentsIds.map(id => this._fileService.getAttachmentBlobById(id, AttachmentType.message))
     );

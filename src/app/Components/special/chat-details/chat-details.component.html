@@ -4,7 +4,7 @@
       <i class="bi bi-arrow-left fs-4"></i>
     </button>
 
-    <div class="d-flex align-items-center flex-grow-1">
+    <div class="d-flex align-items-center flex-grow-1" (click)="openInfo()">
       <div class="rounded-circle overflow-hidden me-3" style="width: 40px; height: 40px;">
         <img [src]="avatarUrl || Assets.chatDefaultAvatar"
              alt="Chat avatar"

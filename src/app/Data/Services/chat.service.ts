@@ -7,6 +7,7 @@ import {Chat} from '../Models/Chat/chat';
 import {lastValueFrom} from 'rxjs';
 import {PagedResponse} from '../Models/Page/paged-response';
 import {CreateChat} from '../Models/Chat/create-chat';
+import {UpdateChat} from '../Models/Chat/update-chat';
 
 @Injectable({
   providedIn: 'root'
@@ -34,5 +35,12 @@ export class ChatService {
       formData.append('userIds', userId);
     });
     return await lastValueFrom(this._httpClient.post<Chat>(`${ApiConfig.BaseUrl}/chats`, formData));
+  }
+
+  public async updateChat(chatId: string, updateChat: UpdateChat): Promise<Chat> {
+    let formData = new FormData();
+    formData.append('name', updateChat.name);
+    formData.append('image', updateChat.image);
+    return await lastValueFrom(this._httpClient.put<Chat>(`${ApiConfig.BaseUrl}/chats/${chatId}`, formData));
   }
 }

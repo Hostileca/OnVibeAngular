@@ -60,7 +60,7 @@ export class CreateChatComponent extends ModalBaseComponent implements OnInit {
     this.availableUsers = Array.from(usersMap.values());
   }
 
-  toggleUserSelection(userId: string) {
+  protected toggleUserSelection(userId: string) {
     const currentIds = this.chatForm.controls.userIds.value || [];
     const newIds = currentIds.includes(userId)
       ? currentIds.filter(id => id !== userId)
@@ -70,7 +70,7 @@ export class CreateChatComponent extends ModalBaseComponent implements OnInit {
     this.chatForm.controls.userIds.markAsDirty();
   }
 
-  onFileSelected(event: Event) {
+  protected onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       this.chatForm.controls.image.setValue(input.files[0]);

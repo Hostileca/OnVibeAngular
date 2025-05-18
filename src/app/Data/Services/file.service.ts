@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import {lastValueFrom} from 'rxjs';
-import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {ApiConfig} from '../Constants/api';
 import {AttachmentType} from '../Models/Attachment/attachment-type';
-import {HttpHelper} from '../../Helpers/http-helper';
 
 @Injectable({
   providedIn: 'root'
@@ -21,16 +20,13 @@ export class FileService {
       );
 
       const blob = response.body;
-      if (!blob || !(blob instanceof Blob)) {
+      if (!blob || !(blob instanceof Blob) || !blob.size) {
         return null;
       }
 
       return this.blobToDataUrl(blob);
     }
     catch (error) {
-      if (this.is404Error(error)) {
-        return null;
-      }
       throw error;
     }
   }
@@ -77,9 +73,5 @@ export class FileService {
 
       reader.readAsDataURL(blob);
     });
-  }
-
-  private is404Error(error: unknown): boolean {
-    return error instanceof HttpErrorResponse && error.status === 404;
   }
 }

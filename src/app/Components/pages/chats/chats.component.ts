@@ -24,7 +24,8 @@ export class ChatsComponent {
   public selectedChat!: Chat
   public chatsSource: (pageSettings: PageSettings) => Promise<PagedResponse<Chat>>
 
-  constructor(private readonly _chatService: ChatService, private readonly _modalService: NgbModal) {
+  constructor(private readonly _chatService: ChatService,
+              private readonly _modalService: NgbModal) {
     this.chatsSource = (pageSettings: PageSettings) => this._chatService.getAvailableChats(pageSettings)
   }
 

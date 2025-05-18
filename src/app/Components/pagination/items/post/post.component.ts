@@ -62,7 +62,7 @@ export class PostComponent extends ItemBaseComponent<Post> implements OnInit {
   }
 
   private async loadOwnerAvatar(){
-    const url = `${ApiConfig.BaseUrl}/users/${this.item.owner.id}/image`;
+    const url = `${ApiConfig.BaseUrl}/users/${this.item.owner.id}/avatar`;
     this.ownerAvatarUrl = await this._fileService.loadImageAsDataUrl(url)
   }
 

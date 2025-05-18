@@ -1,0 +1,78 @@
+<div class="modal-header">
+  <h5 class="modal-title">Update Chat</h5>
+  <button type="button" class="btn-close" aria-label="Close" (click)="close()"></button>
+</div>
+
+<div class="modal-body">
+  <form [formGroup]="chatForm" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label for="chatName" class="form-label">Chat Name</label>
+      <input
+        id="chatName"
+        type="text"
+        class="form-control"
+        formControlName="name"
+        [class.is-invalid]="chatForm.controls.name.invalid && chatForm.controls.name.dirty"
+      />
+      <div class="invalid-feedback" *ngIf="chatForm.controls.name.errors">
+        Chat name is required.
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <div class="position-relative d-inline-block">
+        <img
+          [src]="imagePreview || imageUrl || Assets.chatDefaultAvatar"
+          class="rounded-circle border"
+          width="96"
+          height="96"
+          alt="Chat Avatar"
+        />
+
+        <label
+          class="btn btn-sm btn-primary position-absolute bottom-0 end-0 rounded-circle"
+          style="width: 36px; height: 36px; padding: 0; display: flex; align-items: center; justify-content: center;"
+        >
+          <i class="bi bi-camera-fill" style="font-size: 1rem;"></i>
+          <input type="file" class="d-none" accept="image/*" (change)="onFileSelected($event)" />
+        </label>
+
+        <button
+          *ngIf="imagePreview || imageUrl"
+          type="button"
+          class="btn btn-sm btn-danger position-absolute top-0 end-0 rounded-circle"
+          style="width: 36px; height: 36px; padding: 0; display: flex; align-items: center; justify-content: center;"
+          (click)="removeImage()"
+        >
+          <i class="bi bi-x" style="font-size: 0.9rem;"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-6">
+        <h6>Available Users</h6>
+        <div class="list-group border" style="max-height: 200px; overflow-y: auto;">
+          <app-user *ngFor="let user of availableUsers" [item]="user" (onSelect)="moveToSelected(user)"></app-user>
+        </div>
+      </div>
+
+      <div class="col-6">
+        <h6>Chat Members</h6>
+        <div class="list-group border" style="max-height: 200px; overflow-y: auto;">
+          <app-user *ngFor="let user of selectedMembers" [item]="user" (onSelect)="moveToAvailable(user)"></app-user>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-4">
+      <button
+        type="submit"
+        class="btn btn-success w-100"
+        [disabled]="chatForm.invalid || isLoading"
+      >
+        {{ isLoading ? 'Saving...' : 'Save' }}
+      </button>
+    </div>
+  </form>
+</div>

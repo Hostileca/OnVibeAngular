@@ -49,4 +49,10 @@ export class UserService {
 
     return await lastValueFrom(this._httpClient.put<User>(`${ApiConfig.BaseUrl}/users/${userId}`, formData))
   }
+
+  public async getUsersByIds(userIds: string[]): Promise<User[]> {
+    const promises: Promise<User>[] = [];
+    userIds.forEach(userId => promises.push(this.getUserById(userId)))
+    return await Promise.all(promises)
+  }
 }
