@@ -1,8 +1,10 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {Chat} from '../../../Data/Models/Chat/chat';
 import {MessageService} from '../../../Data/Services/message.service';
 import {NgForOf, NgIf} from '@angular/common';
+import {
+  SendMessageContextMenuComponent
+} from '../../context-menu/send-message-context-menu/send-message-context-menu.component';
 
 @Component({
   selector: 'app-message-input',
@@ -10,12 +12,14 @@ import {NgForOf, NgIf} from '@angular/common';
     FormsModule,
     ReactiveFormsModule,
     NgIf,
-    NgForOf
+    NgForOf,
+    SendMessageContextMenuComponent
   ],
   templateUrl: './message-input.component.html',
   styleUrl: './message-input.component.css'
 })
 export class MessageInputComponent{
+  @ViewChild(SendMessageContextMenuComponent) ContextMenu!: SendMessageContextMenuComponent;
   @Input() set targetChatId(chatId: string) {
     if (chatId) {
       this.form.get('chatId')?.setValue(chatId);
@@ -28,7 +32,8 @@ export class MessageInputComponent{
   public form: FormGroup = new FormGroup({
     text: new FormControl(null),
     attachments: new FormControl<File[]>([]),
-    chatId: new FormControl(null)
+    chatId: new FormControl(null),
+    date: new FormControl<Date | null>(null),
   });
 
   public onFileSelected(event: Event) {
@@ -63,6 +68,10 @@ export class MessageInputComponent{
     });
   }
 
-  protected readonly length = length;
-  protected readonly File = File;
+  protected onSendRightClick(event: MouseEvent): void {
+    event.preventDefault();
+    if(this.ContextMenu){
+      this.ContextMenu.open(event.clientX-250, event.clientY-80);
+    }
+  }
 }

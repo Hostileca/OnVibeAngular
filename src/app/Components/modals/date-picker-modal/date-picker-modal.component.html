@@ -1,0 +1,27 @@
+<div class="modal-header border-bottom-0 pb-0">
+  <h5 class="modal-title fw-bold">Schedule Message</h5>
+  <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss()"></button>
+</div>
+
+<div class="modal-body">
+  <form [formGroup]="dateForm" class="d-flex flex-column gap-3">
+    <div>
+      <label for="scheduleDate" class="form-label fw-semibold">Choose date and time</label>
+      <input
+        id="scheduleDate"
+        type="datetime-local"
+        class="form-control form-control-lg"
+        formControlName="date"
+        [min]="minDate"
+      />
+      <div *ngIf="dateForm.get('date')?.invalid && dateForm.get('date')?.touched" class="text-danger mt-1">
+        Please select a valid future date
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="modal-footer border-top-0 pt-0">
+  <button type="button" class="btn btn-secondary" (click)="activeModal.dismiss()">Cancel</button>
+  <button type="button" class="btn btn-primary" [disabled]="dateForm.invalid" (click)="confirm()">Confirm</button>
+</div>

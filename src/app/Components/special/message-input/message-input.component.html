@@ -18,7 +18,9 @@
         class="form-control border-start-0"
         placeholder="Enter your message">
 
-      <button class="btn btn-primary" type="submit">
+      <button
+        (contextmenu)="onSendRightClick($event)"
+        class="btn btn-primary" type="submit">
         <i class="bi bi-send"></i>
       </button>
     </div>
@@ -38,6 +40,7 @@
         </li>
       </ul>
     </div>
-
   </form>
 </div>
+
+<app-send-message-context-menu [sendMessage]="form.value"></app-send-message-context-menu>

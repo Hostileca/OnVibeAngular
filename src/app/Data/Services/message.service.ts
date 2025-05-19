@@ -26,6 +26,9 @@ export class MessageService {
     if (message.text){
       formData.append('text', message.text);
     }
+    if (message.date){
+      formData.append('date', message.date.toISOString());
+    }
     formData.append('chatId', message.chatId);
     if(message.attachments){
       for (const attachment of message.attachments){

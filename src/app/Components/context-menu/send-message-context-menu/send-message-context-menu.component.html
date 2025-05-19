@@ -1,0 +1,13 @@
+<div class="position-absolute bg-white border rounded shadow-sm p-2"
+     *ngIf="Visible"
+     (click)="$event.stopPropagation()"
+     [style.top.px]="YPos"
+     [style.left.px]="XPos"
+     style="min-width: 180px;">
+
+  <ul class="list-group list-group-flush mb-0">
+    <li class="list-group-item list-group-item-action d-flex align-items-center" (click)="sendScheduleMessage()">
+      <i class="bi bi-clipboard me-2"></i> Send schedule message
+    </li>
+  </ul>
+</div>
