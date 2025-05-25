@@ -86,9 +86,9 @@ export class MessageComponent extends ItemBaseComponent<Message> implements OnIn
   protected async react(emoji: string) {
     const existingReaction = this.item.reactions.find(r => r.emoji === emoji);
     if(existingReaction){
-      await this._reactionService.upsertReaction({messageId: this.item.id, emoji: emoji});
+      await this._reactionService.upsertReaction({chatId: this.item.chatId, messageId: this.item.id, emoji: emoji});
     }
-    await this._reactionService.upsertReaction({messageId: this.item.id});
+    await this._reactionService.upsertReaction({chatId: this.item.chatId, messageId: this.item.id});
   }
 
   protected isMyReaction(emoji: string) : boolean {
@@ -112,31 +112,34 @@ export class MessageComponent extends ItemBaseComponent<Message> implements OnIn
   }
 
   private startListening() {
-    this._eventBusService.On<Reaction>(Events.ReactionSent).subscribe(reaction => {
-      if (this.item && reaction.messageId === this.item.id) {
-        const existingReaction = this.item.reactions.find(r => r.emoji === reaction.emoji && r.senderId === reaction.senderId);
+    this._eventBusService.On<Reaction>(Events.ReactionSent).subscribe(this.onReactionSent);
+    this._eventBusService.On<Reaction>(Events.ReactionRemoved).subscribe(this.onReactionRemoved);
+  }
 
-        if (!existingReaction) {
-          this.item.reactions.push(reaction);
-          this.groupedReactions[reaction.emoji] = (this.groupedReactions[reaction.emoji] || 0) + 1;
+  private onReactionRemoved(reaction: Reaction) {
+    if (this.item && reaction.messageId === this.item.id) {
+      const existingIndex = this.item.reactions.findIndex(r => r.emoji === reaction.emoji && r.senderId === reaction.senderId);
+
+      if (existingIndex !== -1) {
+        this.item.reactions.splice(existingIndex, 1);
+        this.groupedReactions[reaction.emoji]--;
+
+        if (this.groupedReactions[reaction.emoji] === 0) {
+          delete this.groupedReactions[reaction.emoji];
         }
       }
-    });
+    }
+  }
 
-    this._eventBusService.On<Reaction>(Events.ReactionRemoved).subscribe(reaction => {
-      if (this.item && reaction.messageId === this.item.id) {
-        const existingIndex = this.item.reactions.findIndex(r => r.emoji === reaction.emoji && r.senderId === reaction.senderId);
+  private onReactionSent(reaction: Reaction) {
+    if (this.item && reaction.messageId === this.item.id) {
+      const existingReaction = this.item.reactions.find(r => r.emoji === reaction.emoji && r.senderId === reaction.senderId);
 
-        if (existingIndex !== -1) {
-          this.item.reactions.splice(existingIndex, 1);
-          this.groupedReactions[reaction.emoji]--;
-
-          if (this.groupedReactions[reaction.emoji] === 0) {
-            delete this.groupedReactions[reaction.emoji];
-          }
-        }
+      if (!existingReaction) {
+        this.item.reactions.push(reaction);
+        this.groupedReactions[reaction.emoji] = (this.groupedReactions[reaction.emoji] || 0) + 1;
       }
-    });
+    }
   }
 
   private async loadAttachments() {

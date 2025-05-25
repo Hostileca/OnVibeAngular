@@ -9,4 +9,5 @@ export interface Message {
   sender: UserShort;
   date: Date;
   reactions: Reaction[];
+  isRead: boolean;
 }

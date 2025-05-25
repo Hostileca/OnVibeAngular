@@ -1,7 +1,7 @@
 <div class="chat-item" (click)="toggleItem()">
   <div class="chat-avatar">
     <img [src]="avatarUrl || Assets.chatDefaultAvatar" [alt]="item.name">
-    <span *ngIf="true" class="unread-badge">{{99}}</span>
+    <span *ngIf="item.unreadMessagesCount > 0" class="unread-badge">{{item.unreadMessagesCount}}</span>
   </div>
   <div class="chat-content">
     <div class="chat-header">

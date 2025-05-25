@@ -29,7 +29,7 @@ export class MessageContextMenuComponent extends ContextMenuBaseComponent{
   }
 
   protected async react(emoji: string){
-    await this._reactionService.upsertReaction({messageId: this.message.id, emoji});
+    await this._reactionService.upsertReaction({chatId: this.message.chatId, messageId: this.message.id, emoji});
   }
 
   protected readonly QuickReactionsList = QuickReactionsList;
