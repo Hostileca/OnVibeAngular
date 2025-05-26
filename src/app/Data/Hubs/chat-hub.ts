@@ -52,6 +52,9 @@ export class ChatHub {
     this._hubConnection.on(Events.MessageSent, (message: Message) => {
       this._eventBusService.Emit(Events.MessageSent, message)
     })
+    this._hubConnection.on(Events.MessageRead, (reaction: Reaction) => {
+      this._eventBusService.Emit(Events.MessageRead, reaction)
+    })
     this._hubConnection.on(Events.ChatAdded, (chat: Chat) => {
       this._eventBusService.Emit(Events.ChatAdded, chat)
     })

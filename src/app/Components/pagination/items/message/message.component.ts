@@ -17,6 +17,7 @@ import {BlobUrlPipe} from '../../../../Data/Pipes/blob-url.pipe';
 import {FileSizePipe} from '../../../../Data/Pipes/file-size.pipe';
 import {NgbCarousel, NgbCarouselModule, NgbSlide} from '@ng-bootstrap/ng-bootstrap';
 import {AttachmentType} from '../../../../Data/Models/Attachment/attachment-type';
+import {MessageRead} from '../../../../Data/Models/Message/message-read';
 
 @Component({
   selector: 'app-message',
@@ -72,6 +73,11 @@ export class MessageComponent extends ItemBaseComponent<Message> implements OnIn
     return this.item.sender.id === this._authService.userInfo?.id;
   }
 
+  protected get isReadByAnyUser(): boolean {
+    if (!this.item.userToRead) return false;
+    return Object.values(this.item.userToRead).some(isRead => isRead);
+  }
+
   protected get isSystem(): boolean {
     return !this.item.sender
   }
@@ -112,8 +118,9 @@ export class MessageComponent extends ItemBaseComponent<Message> implements OnIn
   }
 
   private startListening() {
-    this._eventBusService.On<Reaction>(Events.ReactionSent).subscribe(this.onReactionSent);
-    this._eventBusService.On<Reaction>(Events.ReactionRemoved).subscribe(this.onReactionRemoved);
+    this._eventBusService.On<Reaction>(Events.ReactionSent).subscribe(reaction => this.onReactionSent(reaction));
+    this._eventBusService.On<Reaction>(Events.ReactionRemoved).subscribe(reaction => this.onReactionRemoved(reaction));
+    this._eventBusService.On<MessageRead>(Events.MessageRead).subscribe(messageRead => this.onMessageRead(messageRead));
   }
 
   private onReactionRemoved(reaction: Reaction) {
@@ -139,6 +146,12 @@ export class MessageComponent extends ItemBaseComponent<Message> implements OnIn
         this.item.reactions.push(reaction);
         this.groupedReactions[reaction.emoji] = (this.groupedReactions[reaction.emoji] || 0) + 1;
       }
+    }
+  }
+
+  private onMessageRead(messageRead: MessageRead) {
+    if(this.item.id === messageRead.messageId && messageRead.userId !== this._authService.userInfo?.id) {
+      this.item.userToRead[messageRead.userId] = true;
     }
   }
 

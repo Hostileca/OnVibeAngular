@@ -10,4 +10,5 @@ export interface Message {
   date: Date;
   reactions: Reaction[];
   isRead: boolean;
+  userToRead: { [userId: string]: boolean };
 }
