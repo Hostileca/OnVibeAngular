@@ -28,9 +28,9 @@ import {AttachmentType} from '../../../../Data/Models/Attachment/attachment-type
     NgbCarousel,
     NgbCarouselModule,
     NgClass,
-    FileSizePipe,
     BlobUrlPipe,
-    CommentsListComponent
+    CommentsListComponent,
+    FileSizePipe
   ],
   templateUrl: './post.component.html',
   styleUrl: './post.component.css'
@@ -41,12 +41,39 @@ export class PostComponent extends ItemBaseComponent<Post> implements OnInit {
   public commentsSource: (pageSettings: PageSettings) => Promise<PagedResponse<Comment>>;
   public showComment: boolean = false;
 
-  protected get imageAttachments() {
-    return this.loadedAttachments.filter(attachment => FileHelper.isImage(attachment)) || [];
+  protected get mediaAttachments() {
+    return this.loadedAttachments.filter(attachment =>
+      FileHelper.isImage(attachment) || FileHelper.isVideo(attachment)
+    );
   }
 
   protected get otherAttachments() {
-    return this.loadedAttachments.filter(attachment => !FileHelper.isImage(attachment)) || [];
+    return this.loadedAttachments.filter(attachment =>
+      !FileHelper.isImage(attachment) && !FileHelper.isVideo(attachment)
+    );
+  }
+
+  protected getVideoType(media: LoadedAttachment): string {
+    const extension = media.fileName.split('.').pop()?.toLowerCase();
+    switch(extension) {
+      case 'mp4': return 'video/mp4';
+      case 'webm': return 'video/webm';
+      case 'ogg': return 'video/ogg';
+      default: return 'video/mp4';
+    }
+  }
+
+  protected getAudioType(media: LoadedAttachment): string {
+    const extension = media.fileName.split('.').pop()?.toLowerCase();
+    switch (extension) {
+      case 'mp3': return 'audio/mpeg';
+      case 'wav': return 'audio/wav';
+      case 'ogg': return 'audio/ogg';
+      case 'm4a': return 'audio/mp4';
+      case 'flac': return 'audio/flac';
+      case 'aac': return 'audio/aac';
+      default: return 'audio/mpeg';
+    }
   }
 
   constructor(private readonly _fileService: FileService,
